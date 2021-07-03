@@ -17,7 +17,7 @@ users {
 characters {
   int id
   string name
-  string scenario
+  string scenario_system
   string prof_img_path
   string tags-delimiter-cumma
   string job
