@@ -42,13 +42,15 @@ basic_parameters {
     int character_id
     int hp
     int mp
-    int san
+    int max_san
     int current_san
     int ide
     int luck
     int damage_bonus
     int max_job_point
+    int remain_job_point
     int max_concern_point
+    int remain_job_point
 }
 
 coc_skills {
