@@ -58,8 +58,8 @@ coc_skills {
   int skill_id
   string name-constraint
   int init
-  string job
-  int concern
+  int job_point
+  int concern_point
   int grow
   int other
   string type
