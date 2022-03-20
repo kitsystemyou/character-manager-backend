@@ -3,9 +3,10 @@
 erDiagram
 
 users ||--o{ characters : have
-characters ||--|| basic_parameters : with
+characters ||--|| coc_basic_parameters : with
 characters ||--o{ coc_skills : have
-characters ||--o{ other_skills : have
+characters ||--o{ sinobi_basic_parameters : with
+characters ||--o{ sinobi_skills : have
 
 users {
   string uuid
@@ -16,10 +17,14 @@ users {
 
 characters {
   int id
+  string user_id
   string name
-  string scenario_system
+  string game_system
   string prof_img_path
   string tags-delimiter-cumma
+}
+
+coc_basic_parameters {
   string job
   string age
   string sex
@@ -36,21 +41,50 @@ characters {
   int size
   int int
   int edu
+  int character_id
+  int hp
+  int mp
+  int max_san
+  int current_san
+  int ide
+  int luck
+  int damage_bonus
+  int max_job_point
+  int remain_job_point
+  int max_concern_point
+  int remain_job_point
+  string memo
 }
 
-basic_parameters {
-    int character_id
-    int hp
-    int mp
-    int max_san
-    int current_san
-    int ide
-    int luck
-    int damage_bonus
-    int max_job_point
-    int remain_job_point
-    int max_concern_point
-    int remain_job_point
+sinobi_basic_parameters {
+  string job
+  string age
+  string sex
+  string height
+  string weight
+  string hair_color
+  string eye_color
+  string skin_color
+  string home_place
+  int con
+  int pow
+  int dex
+  int app
+  int size
+  int int
+  int edu
+  int character_id
+  int hp
+  int mp
+  int max_san
+  int current_san
+  int ide
+  int luck
+  int damage_bonus
+  int max_job_point
+  int remain_job_point
+  int max_concern_point
+  int remain_job_point
 }
 
 coc_skills {
@@ -65,9 +99,15 @@ coc_skills {
   string type
 }
 
-other_skills {
-    int character_id
-    string name-constraint
+sinobi_skills {
+  int character_id
+  int skill_id
+  string name-constraint
+  int init
+  int job_point
+  int concern_point
+  int grow
+  int other
+  string type
 }
-
 ```
