@@ -22,6 +22,8 @@ characters {
   string game_system
   string prof_img_path
   string tags-delimiter-cumma
+  date create_time
+  date update_time
 }
 
 coc_basic_parameters {
