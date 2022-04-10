@@ -5,7 +5,7 @@ erDiagram
 users ||--o{ characters : have
 characters ||--|| coc_basic_parameters : with
 characters ||--o{ coc_skills : have
-characters ||--o{ sinobi_basic_parameters : with
+characters ||--|| sinobi_basic_parameters : with
 characters ||--o{ sinobi_skills : have
 
 users {
