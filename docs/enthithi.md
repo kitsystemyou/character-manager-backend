@@ -3,71 +3,51 @@
 erDiagram
 
 users ||--o{ characters : have
-characters ||--|| coc_basic_parameters : with
+characters ||--|| coc_meta_info : with
+characters ||--|| coc_status_parameters : have
 characters ||--o{ coc_skills : have
-characters ||--|| sinobi_basic_parameters : with
+characters ||--|| sinobi_meta_info : with
 characters ||--o{ sinobi_skills : have
 
 users {
-  string uuid
+  string id "UUID"
   string username
   string email
   string login_type
+  string used_system "一度でも作成したことのあるシステム(カンマ区切りとか)"
 }
 
 characters {
-  int id
-  string user_id
-  string name
+  int id PK "キャラクターID"
+  string user_id FK "ユーザーID"
+  string character_name "PC名"
+  string player_name "PL名"
   string game_system
   string prof_img_path
-  string tags-delimiter-cumma
+  string tags "カンマ区切り"
   date create_time
   date update_time
+  date delete_time
 }
 
-coc_basic_parameters {
+coc_meta_info {
+  int character_id FK "キャラクターID"
   string job
-  string age
   string sex
+  string age
   string height
   string weight
   string hair_color
   string eye_color
   string skin_color
-  string home_place
-  int con
-  int pow
-  int dex
-  int app
-  int size
-  int int
-  int edu
-  int character_id
-  int hp
-  int mp
-  int max_san
-  int current_san
-  int ide
-  int luck
-  int damage_bonus
-  int max_job_point
-  int remain_job_point
-  int max_concern_point
-  int remain_job_point
+  string home_place "出身"
+  string mental_disorder "精神的な障害"
+  string edu_background "学校・学位"
   string memo
 }
 
-sinobi_basic_parameters {
-  string job
-  string age
-  string sex
-  string height
-  string weight
-  string hair_color
-  string eye_color
-  string skin_color
-  string home_place
+coc_status_parameters {
+  int character_id FK "キャラクターID"
   int con
   int pow
   int dex
@@ -75,41 +55,40 @@ sinobi_basic_parameters {
   int size
   int int
   int edu
-  int character_id
   int hp
   int mp
-  int max_san
-  int current_san
-  int ide
-  int luck
-  int damage_bonus
-  int max_job_point
+  int init_san "初期正気度"
+  int current_san "正気度"
+  int idea "アイデア"
+  int knowledge "知識"
+  int damage_bonus "ダメージボーナス"
+  int luck "幸運"
+  int max_job_point "職業ポイント"
   int remain_job_point
-  int max_concern_point
-  int remain_job_point
+  int max_concern_point "興味ポイント"
+  int remain_concern_point
 }
 
 coc_skills {
-  int character_id
-  int skill_id
-  string name-constraint
-  int init
+  int skill_id PK "スキルID"
+  int character_id FK "キャラクターID"
+  string name
   int job_point
   int concern_point
   int grow
   int other
-  string type
+  string type "Basic(基本技能) or Battle(戦闘技能)"
+  bool init_flg "初期値かどうか"
+}
+
+sinobi_meta_info {
+  int character_id FK "キャラクターID"
+  string team
+  string age
 }
 
 sinobi_skills {
   int character_id
   int skill_id
-  string name-constraint
-  int init
-  int job_point
-  int concern_point
-  int grow
-  int other
-  string type
 }
 ```
