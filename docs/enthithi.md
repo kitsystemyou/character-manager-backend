@@ -18,16 +18,16 @@ users {
 }
 
 characters {
-  int id PK "キャラクターID"
-  string user_id FK "ユーザーID"
-  string character_name "PC名"
+  int id PK "🔴 キャラクターID"
+  string user_id FK "🔴 ユーザーID"
+  string character_name "🔴 PC名"
   string player_name "PL名"
-  string game_system
+  string game_system "🔴 "
   string prof_img_path
   string tags "カンマ区切り"
-  date create_time
-  date update_time
-  date delete_time
+  date create_time "🔴 "
+  date update_time "🔴 " 
+  date delete_time "🔴 "
 }
 
 coc_meta_info {
