@@ -1,0 +1,18 @@
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS post;
+
+CREATE TABLE user (
+  `id` INT AUTO_INCREMENT,
+  `username` TEXT NOT NULL,
+  `password` TEXT NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE post (
+  `id` INT PRIMARY KEY AUTO_INCREMENT,
+  `author_id` INT NOT NULL,
+  `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `title` TEXT NOT NULL,
+  `body` TEXT NOT NULL,
+  FOREIGN KEY (author_id) REFERENCES user (id)
+);
