@@ -31,9 +31,11 @@ CREATE TABLE `characters` (
     `game_system` char(20) NOT NULL  COMMENT 'ゲームシステム',
     `prof_img_path` char(50) NOT NULL  COMMENT 'プロフ画像パス',
     `tags` char(255) NOT NULL  COMMENT 'タグ(カンマ区切)',
+    `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
+    `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新日時',
+    `delete_time` DATETIME NULL COMMENT '削除日時',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB  CHARSET = utf8mb4;
-
 
 -- Table structure for table `coc_meta_info`
 -- used in list card
