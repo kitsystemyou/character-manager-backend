@@ -4,7 +4,7 @@ erDiagram
 
 users ||--o{ characters : have
 characters ||--|| coc_meta_info : with
-characters ||--|| coc_status_parameters : have
+characters ||--|| coc_status_parameters : with
 characters ||--o{ coc_skills : have
 characters ||--|| sinobi_meta_info : with
 characters ||--o{ sinobi_skills : have
