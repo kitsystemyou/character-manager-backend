@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}New Post{% endblock %}</h1>
+  <h1>{% block title %}New Character{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
   <form method="post">
-    <label for="title">Title</label>
-    <input name="title" id="title" value="{{ request.form['title'] }}" required>
-    <label for="body">Body</label>
-    <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+    <label for="title">Create Your Character</label>
+    Character Name
+    <input name="character_name" id="character_name" value="{{ request.form['character_name'] }}" required>
+    Player Name
+    <input name="player_name" id="player_name">{{ request.form['player_name'] }}
+    tags(delemiter=cummma)
+    <input name="tags" id="tags">{{ request.form['tags'] }}
     <input type="submit" value="Save">
   </form>
 {% endblock %}

@@ -60,8 +60,10 @@ def login():
         password = request.form['password']
         db = get_db()
         error = None
-        user = db.query(model.User).filter(model.User.username ==
-                                           username).order_by(desc(model.User.id)).first()
+        user = db.query(model.User).filter(
+            model.User.username == username
+        ).order_by(
+            desc(model.User.id)).first()
 
         if not user:
             error = 'Incorrect username.'

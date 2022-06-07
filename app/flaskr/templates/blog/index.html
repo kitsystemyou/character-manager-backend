@@ -8,18 +8,22 @@
 {% endblock %}
 
 {% block content %}
-  {% for post in posts %}
+  {% for character in characters %}
     <article class="post">
       <header>
         <div>
-          <h1>{{ post['title'] }}</h1>
-          <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
+          <h1>{{ character['character_name'] }}</h1>
+          <div class="about">by {{ character['character_name'] }} on {{ character['create_time'].strftime('%Y-%m-%d') }}</div>
         </div>
-        {% if g.user['id'] == post['author_id'] %}
-          <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+        {% if g.user['id'] == character['user_id']|int %}
+          <a class="action" href="{{ url_for('blog.update', id=character['user_id']) }}">Edit</a>
         {% endif %}
       </header>
-      <p class="body">{{ post['body'] }}</p>
+      <p class="body">{{ character['character_name'] }}</p>
+      <p class="body">{{ character['player_name'] }}</p>
+      <p class="body">{{ character['game_system'] }}</p>
+      <p class="body">{{ character['tags'] }}</p>
+      <p class="body">{{ character['update_time'] }}</p>
     </article>
     {% if not loop.last %}
       <hr>

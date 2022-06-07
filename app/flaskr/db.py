@@ -9,20 +9,21 @@ username = 'root'
 password = 'pass'
 host = '127.0.0.1'
 port = '3306'
-db_name = 'users'
+db_name = 'charamane'
 
 SQLALCHEMY_DATABASE_URI =\
-        'mysql://' + username + ':' + password + '@' + host + ':' + port + '/' + db_name
+    'mysql://' + username + ':' + password + \
+    '@' + host + ':' + port + '/' + db_name
 
 engine = create_engine(SQLALCHEMY_DATABASE_URI)
 metadata = MetaData()
-db_session  = scoped_session(sessionmaker(autocommit=False,
-                                            autoflush=False,
-                                            bind=engine))
+db_session = scoped_session(sessionmaker(autocommit=False,
+                                         autoflush=False,
+                                         bind=engine))
+
 
 def init_db():
     metadata.create_all(bind=engine)
-
 
 
 def get_db():
@@ -38,8 +39,10 @@ def close_db(e=None):
     if db is not None:
         db.close()
 
+
 def shutdown_session(exception=None):
     db_session.remove()
+
 
 @click.command('init-db')
 @with_appcontext

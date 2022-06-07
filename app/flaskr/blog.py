@@ -1,8 +1,11 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, session
 )
 from werkzeug.exceptions import abort
 
+from . import model
+from sqlalchemy import desc
+from datetime import datetime
 from flaskr.auth import login_required
 from flaskr.db import get_db
 
@@ -12,33 +15,39 @@ bp = Blueprint('blog', __name__)
 @bp.route('/')
 def index():
     db = get_db()
-    posts = db.execute(
-        'SELECT p.id, title, body, created, author_id, username'
-        ' FROM post p JOIN user u ON p.author_id = u.id'
-        ' ORDER BY created DESC'
-    ).fetchall()
-    return render_template('blog/index.html', posts=posts)
+    characters = db.query(model.Characters).order_by(desc(model.Characters.id))
+    print(characters)
+    return render_template('blog/index.html', characters=characters)
 
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
     if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
+        character_name = request.form['character_name']
+        player_name = request.form['player_name']
+        tags = request.form['tags']
         error = None
-
-        if not title:
-            error = 'Title is required.'
+        print(session['user_id'])
+        if not character_name:
+            error = 'character name is required.'
 
         if error is not None:
             flash(error)
         else:
             db = get_db()
-            db.execute(
-                'INSERT INTO post (title, body, author_id)' \
-                f" VALUES ('{title}', '{body}', {g.user['id']})"
-            )
+            character = model.Characters()
+            character.id = None
+            character.user_id = session['user_id']
+            character.character_name = character_name
+            character.player_name = player_name
+            character.game_system = "CoC"
+            character.prof_img_path = ""
+            character.tags = tags
+            character.create_time = datetime.now()
+            character.update_time = datetime.now()
+            character.delete_time = None
+            db.add(character)
             db.commit()
             return redirect(url_for('blog.index'))
 
