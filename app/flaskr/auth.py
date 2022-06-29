@@ -6,7 +6,8 @@ from flask import (
 from . import model
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy import desc
-from flaskr.db import get_db
+from . import db
+from flaskr.model import User
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -16,7 +17,6 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db = get_db()
         error = None
 
         if not username:
@@ -44,13 +44,10 @@ def register():
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('user_id')
-
     if user_id is None:
         g.user = None
     else:
-        g.user = get_db().execute(
-            f"SELECT * FROM user WHERE id = '{user_id}'"
-        ).fetchone()
+        g.user = User.query.filter_by(id=user_id).first()
 
 
 @bp.route('/login', methods=('GET', 'POST'))
@@ -58,7 +55,6 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db = get_db()
         error = None
         user = db.query(model.User).filter(
             model.User.username == username
