@@ -10,6 +10,7 @@ from flaskr.auth import login_required
 from flaskr.db import get_db
 from flaskr.model import Characters
 
+
 bp = Blueprint('character', __name__)
 
 
@@ -54,22 +55,22 @@ def create():
 
 
 def get_post(id, check_author=True):
-    post = Characters.query.filter_by(id=id).first()
+    character = Characters.query.filter_by(id=id).first()
 
-    if post is None:
+    if character is None:
         abort(404, f"Post id {id} doesn't exist.")
 
-    print(post)
-    if check_author and post.user_id != str(g.user.id):
+    print(character)
+    if check_author and character.user_id != str(g.user.id):
         abort(403)
 
-    return post
+    return character
 
 
 @ bp.route('/<string:id>/update', methods=('GET', 'POST'))
 @ login_required
 def update(id):
-    post = get_post(id)
+    character = get_post(id)
 
     if request.method == 'POST':
         title = request.form['title']
@@ -82,14 +83,12 @@ def update(id):
         if error is not None:
             flash(error)
         else:
-            db = get_db()
-            db.execute(
-                f"UPDATE post SET title = '{title}', body = '{body}' WHERE id = {id}"
-            )
-            db.commit()
+            character.character_name = title
+            character.player_name = body
+            db.session.commit()
             return redirect(url_for('character.index'))
 
-    return render_template('character/update.html', post=post)
+    return render_template('character/update.html', post=character)
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))
