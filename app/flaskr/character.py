@@ -4,11 +4,10 @@ from flask import (
 from werkzeug.exceptions import abort
 
 from . import model, db
-from sqlalchemy import desc
+from sqlalchemy import desc, and_
 from datetime import datetime
 from flaskr.auth import login_required
-from flaskr.db import get_db
-from flaskr.model import Characters
+from flaskr.model import Characters, CocMetaInfo
 
 
 bp = Blueprint('character', __name__)
@@ -49,22 +48,24 @@ def create():
             )
             db.session.add(character)
             db.session.commit()
+
             return redirect(url_for('character.index'))
 
     return render_template('character/create.html')
 
 
 def get_post(id, check_author=True):
-    character = Characters.query.filter_by(id=id).first()
+    character_info = db.session.query(Characters).join(
+        CocMetaInfo, Characters.id == CocMetaInfo.character_id).filter(Characters.id == id).first()
 
-    if character is None:
+    if character_info is None:
         abort(404, f"Post id {id} doesn't exist.")
 
-    print(character)
-    if check_author and character.user_id != str(g.user.id):
+    # ログインユーザーの user_id と一致したら返すそれ以外は 403
+    if check_author and character_info.user_id != str(g.user.id):
         abort(403)
 
-    return character
+    return character_info
 
 
 @ bp.route('/<string:id>/update', methods=('GET', 'POST'))
@@ -94,8 +95,7 @@ def update(id):
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
-    get_post(id)
-    db = get_db()
-    db.execute(f'DELETE FROM post WHERE id = {id}')
-    db.commit()
+    character = Characters.query.filter_by(id=id).first()
+    db.session.delete(character)
+    db.session.commit()
     return redirect(url_for('character.index'))

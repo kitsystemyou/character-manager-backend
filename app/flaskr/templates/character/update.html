@@ -3,6 +3,7 @@
 {% block header %}
   <h1>{% block title %}Edit "{{ post['character_name'] }}"{% endblock %}</h1>
 {% endblock %}
+{{ post }}
 
 {% block content %}
   <form method="post">
@@ -14,7 +15,7 @@
     <input type="submit" value="Save">
   </form>
   <hr>
-  <form action="{{ url_for('character.delete', id=post['id']) }}" method="post">
+  <form action="{{ url_for('character.delete', id=0) }}" method="post">
     <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
   </form>
 {% endblock %}

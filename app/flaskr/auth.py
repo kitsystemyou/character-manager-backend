@@ -56,10 +56,10 @@ def login():
         username = request.form['username']
         password = request.form['password']
         error = None
-        user = db.query(model.User).filter(
-            model.User.username == username
+        user = User.query.filter_by(
+            username=username
         ).order_by(
-            desc(model.User.id)).first()
+            desc(User.id)).first()
 
         if not user:
             error = 'Incorrect username.'
