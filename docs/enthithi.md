@@ -64,9 +64,7 @@ coc_status_parameters {
   int damage_bonus "ダメージボーナス"
   int luck "幸運"
   int max_job_point "職業ポイント"
-  int remain_job_point
   int max_concern_point "興味ポイント"
-  int remain_concern_point
 }
 
 coc_skills {
