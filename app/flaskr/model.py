@@ -14,6 +14,21 @@ class User(db.Model):
     password = db.Column('password', String(20), unique=False)
 
 
+class User(db.Model):  # 本稼働用
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
+
+    def __repr__(self):
+        return f'<User {self.username!r}>'
+
+    id = db.Column('id', Integer, primary_key=True)
+    username = db.Column('username', String(10), unique=False)
+    password = db.Column('password', String(20), unique=False)
+    create_time = db.Column('create_time', DateTime, unique=False)
+    update_time = db.Column('update_time', DateTime, unique=False)
+    delete_time = db.Column('delete_time', DateTime, unique=False)
+
+
 class Characters(db.Model):
     __tablename__ = 'characters'
 

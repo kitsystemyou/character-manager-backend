@@ -15,6 +15,9 @@ users {
   string email
   string login_type
   string used_system "一度でも作成したことのあるシステム(カンマ区切りとか)"
+  date create_time "🔴 作成日時"
+  date update_time "🔴 更新日時" 
+  date delete_time "🔴 削除日時"
 }
 
 characters {
