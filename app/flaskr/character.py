@@ -89,7 +89,8 @@ def update(id):
             db.session.commit()
             return redirect(url_for('character.index'))
 
-    return render_template('character/update.html', post=character)
+    # return render_template('character/update.html', post=character)
+    return character
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))
