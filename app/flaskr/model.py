@@ -89,10 +89,7 @@ class CocStatusParameters(db.Model):
     damage_bonus = db.Column('damage_bonus', Integer, unique=False)
     luck = db.Column('luck', Integer, unique=False)
     max_job_pint = db.Column('max_job_pint', Integer, unique=False)
-    remain_job_pint = db.Column('remain_job_pint', Integer, unique=False)
     max_concern_point = db.Column('max_concern_point', Integer, unique=False)
-    remain_concern_point = db.Column(
-        'remain_concern_point', Integer, unique=False)
 
 
 class CocSkills(db.Model):
