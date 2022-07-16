@@ -55,7 +55,7 @@ def create():
 
 
 def get_post(id, check_author=True):
-    character_info = db.session.query(Characters).join(
+    character_info = db.session.query(Characters, CocMetaInfo).join(
         CocMetaInfo, Characters.id == CocMetaInfo.character_id).filter(Characters.id == id).first()
 
     if character_info is None:
