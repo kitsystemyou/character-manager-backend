@@ -1,5 +1,10 @@
 from sqlalchemy import ForeignKey, Integer, String, DateTime
 from . import db
+from flask_marshmallow import Marshmallow
+from flask_marshmallow.fields import fields
+
+
+ma = Marshmallow()
 
 
 class User(db.Model):
@@ -13,20 +18,56 @@ class User(db.Model):
     username = db.Column('username', String(10), unique=False)
     password = db.Column('password', String(20), unique=False)
 
+# 本稼働用
+# class User(db.Model):
+#     def __init__(self, **kwargs):
+#         super(User, self).__init__(**kwargs)
 
-class User(db.Model):  # 本稼働用
+#     def __repr__(self):
+#         return f'<User {self.username!r}>'
+
+#     id = db.Column('id', Integer, primary_key=True)
+#     username = db.Column('username', String(10), unique=False)
+#     password = db.Column('password', String(20), unique=False)
+#     create_time = db.Column('create_time', DateTime, unique=False)
+#     update_time = db.Column('update_time', DateTime, unique=False)
+#     delete_time = db.Column('delete_time', DateTime, unique=False)
+
+
+class CocMetaInfo(db.Model):
+    __tablename__ = "coc_meta_info"
+
     def __init__(self, **kwargs):
-        super(User, self).__init__(**kwargs)
+        super(CocMetaInfo, self).__init__(**kwargs)
 
     def __repr__(self):
-        return f'<User {self.username!r}>'
+        return f'<COC_META_INFO {self.character_id!r}>'
 
-    id = db.Column('id', Integer, primary_key=True)
-    username = db.Column('username', String(10), unique=False)
-    password = db.Column('password', String(20), unique=False)
-    create_time = db.Column('create_time', DateTime, unique=False)
-    update_time = db.Column('update_time', DateTime, unique=False)
-    delete_time = db.Column('delete_time', DateTime, unique=False)
+    character_id = db.Column('character_id', Integer,
+                             ForeignKey('characters.id'), primary_key=True)
+    job = db.Column('job', String(10), unique=False)
+    sex = db.Column('sex', String(5), unique=False)
+    age = db.Column('age', String(5), unique=False)
+    height = db.Column('height', String(5), unique=False)
+    weight = db.Column('weight', String(5), unique=False)
+    hair_color = db.Column('hair_color', String(20), unique=False)
+    eye_color = db.Column('eye_color', String(20), unique=False)
+    skin_color = db.Column('skin_color', String(20), unique=False)
+    home_place = db.Column('home_place', String(20), unique=False)
+    mental_disorder = db.Column('mental_disorder', String(10), unique=False)
+    edu_background = db.Column('edu_background', String(10), unique=False)
+    memo = db.Column('memo', String(100), unique=False)
+
+
+class CocMetaInfoSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = CocMetaInfo
+        include_fk = True
+        load_instance = True
+
+    created_time = fields.DateTime('%Y-%m-%dT%H:%M:%S+09:00')
+    updated_time = fields.DateTime('%Y-%m-%dT%H:%M:%S+09:00')
+    delete_time = fields.DateTime('%Y-%m-%dT%H:%M:%S+09:00')
 
 
 class Characters(db.Model):
@@ -48,32 +89,26 @@ class Characters(db.Model):
     create_time = db.Column('create_time', DateTime, unique=False)
     update_time = db.Column('update_time', DateTime, unique=False)
     delete_time = db.Column('delete_time', DateTime, unique=False)
+    coc_meta_info = db.relationship("CocMetaInfo", backref='characters')
 
 
-class CocMetaInfo(db.Model):
-    __tablename__ = "coc_meta_info"
+class CharacterSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Characters
+        load_instance = True
 
-    def __init__(self, **kwargs):
-        super(Characters, self).__init__(**kwargs)
+    created_time = fields.DateTime('%Y-%m-%dT%H:%M:%S+09:00')
+    updated_time = fields.DateTime('%Y-%m-%dT%H:%M:%S+09:00')
+    delete_time = fields.DateTime('%Y-%m-%dT%H:%M:%S+09:00')
+    coc_meta_info = fields.Nested(CocMetaInfoSchema)
 
-    def __repr__(self):
-        return f'<COC_META_INFO {self.character_id!r}>'
 
-    # dummy_key = db.Column('dummy_key', Integer, primary_key=True)
-    character_id = db.Column('character_id', Integer,
-                             ForeignKey('chracters.id'), primary_key=True)
-    job = db.Column('job', String(10), unique=False)
-    sex = db.Column('sex', String(5), unique=False)
-    age = db.Column('age', String(5), unique=False)
-    height = db.Column('height', String(5), unique=False)
-    weight = db.Column('weight', String(5), unique=False)
-    hair_color = db.Column('hair_color', String(20), unique=False)
-    eye_color = db.Column('eye_color', String(20), unique=False)
-    skin_color = db.Column('skin_color', String(20), unique=False)
-    home_place = db.Column('home_place', String(20), unique=False)
-    mental_disorder = db.Column('mental_disorder', String(10), unique=False)
-    edu_background = db.Column('edu_background', String(10), unique=False)
-    memo = db.Column('memo', String(100), unique=False)
+DynamicSchema = ma.Schema.from_dict({
+    Characters.__tablename__:
+        ma.Nested(CharacterSchema, dump_only=True),
+    CocMetaInfo.__tablename__:
+        ma.Nested(CocMetaInfoSchema, dump_only=True)
+})
 
 
 class CocStatusParameters(db.Model):
