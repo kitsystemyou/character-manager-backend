@@ -11,7 +11,7 @@ characters ||--o{ sinobi_skills : have
 
 users {
   string id "UUID"
-  string username
+  string user_name
   string email
   string login_type
   string used_system "一度でも作成したことのあるシステム(カンマ区切りとか)"
@@ -73,13 +73,12 @@ coc_status_parameters {
 coc_skills {
   int skill_id PK "スキルID"
   int character_id FK "キャラクターID"
-  string name
+  string skill_name
   int job_point
   int concern_point
   int grow
   int other
-  string type "Basic(基本技能) or Battle(戦闘技能)"
-  bool init_flg "初期値かどうか"
+  string skill_type "Basic(基本技能) or Battle(戦闘技能) or ..."
 }
 
 sinobi_meta_info {
