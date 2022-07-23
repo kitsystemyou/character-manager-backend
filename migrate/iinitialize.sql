@@ -84,6 +84,7 @@ CREATE TABLE
         `mp` int NULL COMMENT 'MP',
         `init_san` int NULL COMMENT '初期正気度',
         `current_san` int NULL COMMENT '現在正気度',
+        `idea` int NULL Comment 'アイデア',
         `knowledge` int NULL COMMENT '知識',
         `damage_bonus` int NULL COMMENT 'ダメージボーナス',
         `luck` int NULL COMMENT '幸運',
