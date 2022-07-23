@@ -27,7 +27,7 @@ class User(db.Model):
 #         return f'<User {self.username!r}>'
 
 #     id = db.Column('id', Integer, primary_key=True)
-#     username = db.Column('username', String(10), unique=False)
+#     username = db.Column('user_name', String(10), unique=False)
 #     password = db.Column('password', String(20), unique=False)
 #     create_time = db.Column('create_time', DateTime, unique=False)
 #     update_time = db.Column('update_time', DateTime, unique=False)
@@ -70,47 +70,6 @@ class CocMetaInfoSchema(ma.SQLAlchemyAutoSchema):
     delete_time = fields.DateTime('%Y-%m-%dT%H:%M:%S+09:00')
 
 
-class Characters(db.Model):
-    __tablename__ = 'characters'
-
-    def __init__(self, **kwargs):
-        super(Characters, self).__init__(**kwargs)
-
-    def __repr__(self):
-        return f'<CHARACTERS {self.id!r}>'
-
-    id = db.Column('id', Integer, primary_key=True)
-    user_id = db.Column('user_id', String(32), unique=True)
-    character_name = db.Column('character_name', String(255), unique=False)
-    player_name = db.Column('player_name', String(20), unique=False)
-    game_system = db.Column('game_system', String(20), unique=False)
-    prof_img_path = db.Column('prof_img_path', String(50), unique=True)
-    tags = db.Column('tags', String(255), unique=False)
-    create_time = db.Column('create_time', DateTime, unique=False)
-    update_time = db.Column('update_time', DateTime, unique=False)
-    delete_time = db.Column('delete_time', DateTime, unique=False)
-    coc_meta_info = db.relationship("CocMetaInfo", backref='characters')
-
-
-class CharacterSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Characters
-        load_instance = True
-
-    created_time = fields.DateTime('%Y-%m-%dT%H:%M:%S+09:00')
-    updated_time = fields.DateTime('%Y-%m-%dT%H:%M:%S+09:00')
-    delete_time = fields.DateTime('%Y-%m-%dT%H:%M:%S+09:00')
-    coc_meta_info = fields.Nested(CocMetaInfoSchema)
-
-
-DynamicSchema = ma.Schema.from_dict({
-    Characters.__tablename__:
-        ma.Nested(CharacterSchema, dump_only=True),
-    CocMetaInfo.__tablename__:
-        ma.Nested(CocMetaInfoSchema, dump_only=True)
-})
-
-
 class CocStatusParameters(db.Model):
     __tablename__ = "coc_status_parameters"
 
@@ -118,17 +77,16 @@ class CocStatusParameters(db.Model):
         super(Characters, self).__init__(**kwargs)
 
     def __repr__(self):
-        return f'<COC_STATUS_INFO {self.id!r}>'
+        return f'<COC_STATUS_INFO {self.character_id!r}>'
 
-    dummy_key = db.Column('dummy_key', Integer, primary_key=True)
     character_id = db.Column('character_id', Integer,
-                             ForeignKey('characters.id'))
+                             ForeignKey('characters.id'), primary_key=True)
     con = db.Column('con', Integer, unique=False)
     pow = db.Column('pow', Integer, unique=False)
     dex = db.Column('dex', Integer, unique=False)
     app = db.Column('app', Integer, unique=False)
     size = db.Column('size', Integer, unique=False)
-    int = db.Column('int', Integer, unique=False)
+    inte = db.Column('inte', Integer, unique=False)
     edu = db.Column('edu', Integer, unique=False)
     hp = db.Column('hp', Integer, unique=False)
     mp = db.Column('mp', Integer, unique=False)
@@ -138,8 +96,15 @@ class CocStatusParameters(db.Model):
     knowledge = db.Column('knowledge', Integer, unique=False)
     damage_bonus = db.Column('damage_bonus', Integer, unique=False)
     luck = db.Column('luck', Integer, unique=False)
-    max_job_pint = db.Column('max_job_pint', Integer, unique=False)
+    max_job_point = db.Column('max_job_point', Integer, unique=False)
     max_concern_point = db.Column('max_concern_point', Integer, unique=False)
+
+
+class CocStatusParametersSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = CocStatusParameters
+        include_fk = True
+        load_instance = True
 
 
 class CocSkills(db.Model):
@@ -160,3 +125,53 @@ class CocSkills(db.Model):
     grow = db.Column('grow', Integer, unique=False)
     other = db.Column('other', Integer, unique=False)
     skill_type = db.Column('skill_type', Integer, unique=False)
+
+
+class CocSkillsSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = CocMetaInfo
+        include_fk = True
+        load_instance = True
+
+
+class Characters(db.Model):
+    __tablename__ = 'characters'
+
+    def __init__(self, **kwargs):
+        super(Characters, self).__init__(**kwargs)
+
+    def __repr__(self):
+        return f'<CHARACTERS {self.id!r}>'
+
+    id = db.Column('id', Integer, primary_key=True)
+    user_id = db.Column('user_id', String(32), unique=True)
+    character_name = db.Column('character_name', String(255), unique=False)
+    player_name = db.Column('player_name', String(20), unique=False)
+    game_system = db.Column('game_system', String(20), unique=False)
+    prof_img_path = db.Column('prof_img_path', String(50), unique=True)
+    tags = db.Column('tags', String(255), unique=False)
+    create_time = db.Column('create_time', DateTime, unique=False)
+    update_time = db.Column('update_time', DateTime, unique=False)
+    delete_time = db.Column('delete_time', DateTime, unique=False)
+    coc_meta_info = db.relationship("CocMetaInfo", backref='characters')
+    coc_status_parameters = db.relationship(
+        "CocStatusParameters", backref='characters')
+
+
+class CharacterSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Characters
+        load_instance = True
+
+    created_time = fields.DateTime('%Y-%m-%dT%H:%M:%S+09:00')
+    updated_time = fields.DateTime('%Y-%m-%dT%H:%M:%S+09:00')
+    delete_time = fields.DateTime('%Y-%m-%dT%H:%M:%S+09:00')
+    coc_meta_info = fields.Nested(CocMetaInfoSchema)
+
+
+DynamicSchema = ma.Schema.from_dict({
+    Characters.__tablename__:
+        ma.Nested(CharacterSchema, dump_only=True),
+    CocMetaInfo.__tablename__:
+        ma.Nested(CocMetaInfoSchema, dump_only=True)
+})

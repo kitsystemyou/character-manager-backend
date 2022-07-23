@@ -78,7 +78,7 @@ CREATE TABLE
         `dex` int NULL COMMENT 'DEX',
         `app` int NULL COMMENT 'APP',
         `size` int NULL COMMENT 'SIZE',
-        `int` int NULL COMMENT 'INT',
+        `inte` int NULL COMMENT 'INT',
         `edu` int NULL COMMENT 'EDU',
         `hp` int NULL COMMENT 'HP',
         `mp` int NULL COMMENT 'MP',
