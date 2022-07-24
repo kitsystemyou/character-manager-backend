@@ -21,6 +21,12 @@ def index():
     return render_template('character/index.html', characters=characters)
 
 
+@bp.route('/characters')
+def list_character():
+    characters = Characters.query.order_by(desc(model.Characters.id))
+    return jsonify({'result': CharacterSchema(many=True).dump(characters)}), 200
+
+
 @bp.route('/character/<int:ch_id>')
 def get_character(ch_id):
     character = Characters.query.filter_by(id=ch_id).first()
@@ -73,7 +79,7 @@ def create():
 
     if error is not None:
         flash(error)
-        return {"Status": "500"}
+        return jsonify({"result": ""}), 500
     else:
         character = Characters(
             id=None,
@@ -93,7 +99,7 @@ def create():
         return redirect(url_for('character.index'))
 
 
-def get_post(id, check_author=True):
+def get_character(id, check_author=True):
     character_info = db.session.query(Characters, CocMetaInfo).join(
         CocMetaInfo, Characters.id == CocMetaInfo.character_id).filter(Characters.id == id).first()
 
@@ -110,7 +116,7 @@ def get_post(id, check_author=True):
 @ bp.route('/<string:id>/update', methods=('GET', 'POST'))
 # @ login_required
 def update(id):
-    character = get_post(id)
+    character = get_character(id)
 
     if request.method == 'POST':
         title = request.form['title']
@@ -122,6 +128,7 @@ def update(id):
 
         if error is not None:
             flash(error)
+            return jsonify({"result": '{}'.format(error)}), 500
         else:
             character.character_name = title
             character.player_name = body
@@ -133,9 +140,14 @@ def update(id):
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))
-@login_required
+# @login_required
 def delete(id):
+    character_meta_info = CocMetaInfo.query.filter_by(character_id=id).first()
+    character_status_parameters = CocStatusParameters.query.filter_by(
+        character_id=id).first()
     character = Characters.query.filter_by(id=id).first()
+    db.session.delete(character_meta_info)
+    db.session.delete(character_status_parameters)
     db.session.delete(character)
     db.session.commit()
     return redirect(url_for('character.index'))
