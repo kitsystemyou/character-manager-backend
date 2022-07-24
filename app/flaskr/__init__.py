@@ -3,6 +3,7 @@ import os
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_sqlalchemy.model import DefaultMeta, Model
+from flask_marshmallow import Marshmallow
 
 username = 'root'
 password = 'pass'
@@ -10,6 +11,7 @@ host = '127.0.0.1'
 port = '3306'
 db_name = 'charamane'
 db = SQLAlchemy()
+ma = Marshmallow()
 
 
 def create_app(test_config=None):
@@ -19,7 +21,8 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         SQLALCHEMY_TRACK_MODIFICATIONS=True,
         SQLALCHEMY_DATABASE_URI='mysql://' + username + ':' + password +
-        '@' + host + ':' + port + '/' + db_name
+        '@' + host + ':' + port + '/' + db_name,
+        JSON_AS_ASCII=False
     )
 
     if test_config is None:
@@ -36,6 +39,7 @@ def create_app(test_config=None):
         pass
 
     db.init_app(app)
+    ma.init_app(app)
 
     # Create app blueprints
     from . import auth
