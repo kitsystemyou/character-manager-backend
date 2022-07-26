@@ -73,6 +73,7 @@ DROP TABLE IF EXISTS `coc_status_parameters`;
 CREATE TABLE
     `coc_status_parameters` (
         `character_id` int NOT NULL AUTO_INCREMENT COMMENT 'キャラクターID',
+        `str` int NULL COMMENT 'STR',
         `con` int NULL COMMENT 'CON',
         `pow` int NULL COMMENT 'POW',
         `dex` int NULL COMMENT 'DEX',

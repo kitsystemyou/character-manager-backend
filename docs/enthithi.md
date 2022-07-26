@@ -51,6 +51,7 @@ coc_meta_info {
 
 coc_status_parameters {
   int character_id FK "キャラクターID"
+  int str
   int con
   int pow
   int dex
