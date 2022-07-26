@@ -81,6 +81,7 @@ class CocStatusParameters(db.Model):
 
     character_id = db.Column('character_id', Integer,
                              ForeignKey('characters.id'), primary_key=True)
+    str = db.Column('str', Integer, unique=False)
     con = db.Column('con', Integer, unique=False)
     pow = db.Column('pow', Integer, unique=False)
     dex = db.Column('dex', Integer, unique=False)
