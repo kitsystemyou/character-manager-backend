@@ -145,9 +145,11 @@ def delete(id):
     character_meta_info = CocMetaInfo.query.filter_by(character_id=id).first()
     character_status_parameters = CocStatusParameters.query.filter_by(
         character_id=id).first()
+    skills = CocSkills.query.filter_by(character_id=id).all()
+    [db.session.delete(s) for s in skills]
     character = Characters.query.filter_by(id=id).first()
     db.session.delete(character_meta_info)
     db.session.delete(character_status_parameters)
     db.session.delete(character)
     db.session.commit()
-    return redirect(url_for('character.index'))
+    return jsonify({"deleted": id}), 200

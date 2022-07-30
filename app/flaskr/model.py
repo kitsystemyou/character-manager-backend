@@ -115,12 +115,12 @@ class CocSkills(db.Model):
         super(Characters, self).__init__(**kwargs)
 
     def __repr__(self):
-        return f'<COC_SKILLS {self.id!r}>'
+        return f'<COC_SKILLS {self.skill_id!r}>'
 
     skill_id = db.Column('skill_id', Integer, primary_key=True)
     character_id = db.Column('character_id', Integer,
                              ForeignKey('characters.id'))
-    skill_name = db.Column('skill_name', Integer, unique=False)
+    skill_name = db.Column('skill_name', String, unique=False)
     job_point = db.Column('job_point', Integer, unique=False)
     concern_point = db.Column('concern_point', Integer, unique=False)
     grow = db.Column('grow', Integer, unique=False)
@@ -130,7 +130,7 @@ class CocSkills(db.Model):
 
 class CocSkillsSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = CocMetaInfo
+        model = CocSkills
         include_fk = True
         load_instance = True
 
