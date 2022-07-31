@@ -2,9 +2,9 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, session, jsonify
 )
 from werkzeug.exceptions import abort
-
+from http import HTTPStatus
 from . import model, db
-from sqlalchemy import desc
+from sqlalchemy import create_engine, desc
 from datetime import datetime
 from flaskr.auth import login_required
 from flaskr.model import (
@@ -19,6 +19,49 @@ bp = Blueprint('character', __name__)
 def index():
     characters = Characters.query.order_by(desc(model.Characters.id))
     return render_template('character/index.html', characters=characters)
+
+
+@bp.route('/test', methods=['POST'])
+def create_character_info():
+    req_json = request.get_json()
+    print(req_json["character"].keys())
+    if not req_json["character"]:
+        error = 'character value name is required.'
+        flash(error)
+    else:
+        character_data = req_json["character"]
+    character = Characters(
+        user_id=character_data["user_id"],
+        character_name=character_data["character_name"],
+        player_name=character_data["player_name"],
+        game_system=character_data["game_system"],
+        prof_img_path=character_data["prof_img_path"],
+        tags=character_data["tags"],
+        create_time=datetime.now(),
+        update_time=datetime.now(),
+    )
+    print(vars(character))
+    create_character(character)
+    return {"res": character_data}, HTTPStatus.OK
+
+
+def create_character(character):
+    print("create_character")
+    db.session.add(character)
+    db.session.commit()
+    return {"res": character}, HTTPStatus.OK
+
+
+def create_meta_info(meta_info):
+    return {"res": meta_info}, HTTPStatus.OK
+
+
+def create_coc_status_parameters(coc_status_parameters):
+    return {"res": coc_status_parameters}, HTTPStatus.OK
+
+
+def create_skill(coc_skill):
+    return {"res": coc_skill}, HTTPStatus.OK
 
 
 @bp.route('/characters')
@@ -66,7 +109,7 @@ def get_characters_info_status(ch_id):
     return jsonify({"result": c}), 200
 
 
-@bp.route('/create', methods=['POST'])
+@bp.route('/character', methods=['POST'])
 @login_required
 def create():
     character_name = request.form['character_name']
@@ -79,7 +122,7 @@ def create():
 
     if error is not None:
         flash(error)
-        return jsonify({"result": ""}), 500
+        return jsonify({"result": "unknown error"}), HTTPStatus.INTERNAL_SERVER_ERROR
     else:
         character = Characters(
             id=None,
