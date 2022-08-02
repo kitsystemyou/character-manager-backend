@@ -24,9 +24,11 @@ def index():
 @bp.route('/test', methods=['POST'])
 def create_character_info():
     req_json = request.get_json()
-    print(req_json["character"].keys())
+
+    # TODO: Transaction
+    # Create Character
     if not req_json["character"]:
-        error = 'character value name is required.'
+        error = "character is required."
         flash(error)
     else:
         character_data = req_json["character"]
@@ -41,7 +43,59 @@ def create_character_info():
         update_time=datetime.now(),
     )
     print(vars(character))
-    create_character(character)
+    character_id = create_character(character)
+    print(character_id)
+
+    # Create coc_meta_info
+    if not req_json["character"]["coc_meta_info"]:
+        error = "character meta info is required."
+    else:
+        coc_meta_info_data = req_json["character"]["coc_meta_info"]
+    coc_meta_info = CocMetaInfo(
+        character_id=character_id,
+        job=coc_meta_info_data["job"],
+        sex=coc_meta_info_data["sex"],
+        age=coc_meta_info_data["age"],
+        height=coc_meta_info_data["height"],
+        weight=coc_meta_info_data["weight"],
+        hair_color=coc_meta_info_data["hair_color"],
+        eye_color=coc_meta_info_data["eye_color"],
+        skin_color=coc_meta_info_data["skin_color"],
+        home_place=coc_meta_info_data["home_place"],
+        mental_disorder=coc_meta_info_data["mental_disorder"],
+        edu_background=coc_meta_info_data["edu_background"],
+        memo=coc_meta_info_data["memo"],
+    )
+    create_meta_info(coc_meta_info)
+
+    # Create coc_status_params
+    if not req_json["character"]["coc_status_parameters"]:
+        error = "character meta info is required."
+    else:
+        coc_status_parameters = req_json["character"]["coc_status_parameters"]
+    coc_status_parameters = CocStatusParameters(
+        character_id=character_id,
+        str=coc_status_parameters["str"],
+        con=coc_status_parameters["con"],
+        pow=coc_status_parameters["pow"],
+        dex=coc_status_parameters["dex"],
+        app=coc_status_parameters["app"],
+        size=coc_status_parameters["size"],
+        inte=coc_status_parameters["inte"],
+        edu=coc_status_parameters["edu"],
+        hp=coc_status_parameters["hp"],
+        mp=coc_status_parameters["mp"],
+        init_san=coc_status_parameters["init_san"],
+        current_san=coc_status_parameters["current_san"],
+        idea=coc_status_parameters["idea"],
+        knowledge=coc_status_parameters["knowledge"],
+        damage_bonus=coc_status_parameters["damage_bonus"],
+        luck=coc_status_parameters["luck"],
+        max_job_point=coc_status_parameters["max_job_point"],
+        max_concern_point=coc_status_parameters["max_concern_point"],
+    )
+    create_coc_status_parameters(coc_status_parameters)
+
     return {"res": character_data}, HTTPStatus.OK
 
 
@@ -49,14 +103,18 @@ def create_character(character):
     print("create_character")
     db.session.add(character)
     db.session.commit()
-    return {"res": character}, HTTPStatus.OK
+    return character.id
 
 
 def create_meta_info(meta_info):
+    db.session.add(meta_info)
+    db.session.commit()
     return {"res": meta_info}, HTTPStatus.OK
 
 
 def create_coc_status_parameters(coc_status_parameters):
+    db.session.add(coc_status_parameters)
+    db.session.commit()
     return {"res": coc_status_parameters}, HTTPStatus.OK
 
 

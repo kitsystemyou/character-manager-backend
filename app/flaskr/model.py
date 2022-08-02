@@ -74,7 +74,7 @@ class CocStatusParameters(db.Model):
     __tablename__ = "coc_status_parameters"
 
     def __init__(self, **kwargs):
-        super(Characters, self).__init__(**kwargs)
+        super(CocStatusParameters, self).__init__(**kwargs)
 
     def __repr__(self):
         return f'<COC_STATUS_INFO {self.character_id!r}>'
