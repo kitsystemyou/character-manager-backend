@@ -93,7 +93,7 @@ def create_character_info():
     create_character(character)
     db.session.commit()
     id = character.id
-    print(id)
+    print("character_id", id)
 
     # Create coc_meta_info
     if not req_json["character"]["coc_meta_info"]:
@@ -145,6 +145,22 @@ def create_character_info():
     )
     create_coc_status_parameters(coc_status_parameters)
 
+    if not req_json["character"]["coc_skills"]:
+        error = "coc skills are required."
+    else:
+        coc_skills = req_json["character"]["coc_skills"]
+    for skill_data in coc_skills:
+        skill = CocSkills(
+            character_id=id,
+            skill_name=skill_data["skill_name"],
+            job_point=skill_data["job_point"],
+            concern_point=skill_data["concern_point"],
+            grow=skill_data["grow"],
+            other=skill_data["other"],
+            skill_type=skill_data["skill_type"],
+        )
+        create_skill(skill)
+
     if error is not None:
         return {"Failed to create character": error}, 500
     db.session.commit()
@@ -152,22 +168,26 @@ def create_character_info():
 
 
 def create_character(character):
-    print("create_character")
+    print("create character")
     db.session.add(character)
     return
 
 
 def create_meta_info(meta_info):
+    print("create coc_meta_info create")
     db.session.add(meta_info)
     return
 
 
 def create_coc_status_parameters(coc_status_parameters):
+    print("create coc_status_parameters")
     db.session.add(coc_status_parameters)
     return
 
 
 def create_skill(coc_skill):
+    print("create coc_skill")
+    db.session.add(coc_skill)
     return
 
 

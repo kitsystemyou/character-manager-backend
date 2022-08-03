@@ -112,7 +112,7 @@ class CocSkills(db.Model):
     __tablename__ = "coc_skills"
 
     def __init__(self, **kwargs):
-        super(Characters, self).__init__(**kwargs)
+        super(CocSkills, self).__init__(**kwargs)
 
     def __repr__(self):
         return f'<COC_SKILLS {self.skill_id!r}>'
