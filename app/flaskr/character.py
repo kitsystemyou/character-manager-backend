@@ -303,9 +303,10 @@ def update(id):
 def update_skills(req_skills, id):
     db_skill = CocSkills.query.filter_by(character_id=id).all()
     for rs in req_skills:
-        matched_db_data = list(filter(lambda skill: skill.skill_name == rs.get(
-            "skill_name"), db_skill))
+        matched_db_data = list(filter(lambda skill: skill.skill_id == rs.get(
+            "skill_id"), db_skill))
         if matched_db_data:
+            # skill_id 合うものあったら更新
             print("update skill", rs.get("skill_name"), rs.get("skill_id"))
             mdb = matched_db_data[0]
             mdb.skill_name = rs.get("skill_name"),
@@ -315,7 +316,7 @@ def update_skills(req_skills, id):
             mdb.other = rs.get("other"),
             mdb.skill_type = rs.get("skill_type"),
         else:
-            # character_id で絞って同じ名前のもの無いなら skill_id が間違っているとして
+            # character_id で絞って同じ skill_id のもの無いなら skill_id が間違っているとして
             # auto_increment する skill_id で新規に作成
             print("insert skill", rs.get("skill_name"))
             new_skill = CocSkills(
