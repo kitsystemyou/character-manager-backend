@@ -1,6 +1,6 @@
 import datetime
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, session, jsonify
+    Blueprint, flash, g, render_template, request, jsonify
 )
 from werkzeug.exceptions import abort
 from http import HTTPStatus
@@ -234,7 +234,6 @@ def update(id):
         join(CocMetaInfo, Characters.id == CocMetaInfo.character_id).\
         join(CocStatusParameters, Characters.id == CocStatusParameters.character_id).\
         filter(Characters.id == id).first()
-    print(c.keys)
     chara = c[0]
     meta = c[1]
     status = c[2]
@@ -244,7 +243,6 @@ def update(id):
         return jsonify({"result": '{}'.format(error)}), 500
     else:
         # Update character, meta_ifo, status_params
-        print(req_character.keys())
         chara.character_name = req_character.get('character_name')
         chara.player_name = req_character.get("player_name")
         chara.game_system = req_character.get("game_system")
@@ -291,8 +289,46 @@ def update(id):
         status.max_concern_point = req_status.get(
             "max_concern_point")
         # TODO: COC_SKILL の Upsert
+
+        if not req_json["character"]["coc_skills"]:
+            print("coc_status_parameters is none.")
+        else:
+            req_skills = req_json["character"]["coc_skills"]
+        update_skills(req_skills, id)
+
         db.session.commit()
         return jsonify({"result": "updated"}), HTTPStatus.OK
+
+
+def update_skills(req_skills, id):
+    db_skill = CocSkills.query.filter_by(character_id=id).all()
+    for rs in req_skills:
+        matched_db_data = list(filter(lambda skill: skill.skill_name == rs.get(
+            "skill_name"), db_skill))
+        if matched_db_data:
+            print("update skill", rs.get("skill_name"), rs.get("skill_id"))
+            mdb = matched_db_data[0]
+            mdb.skill_name = rs.get("skill_name"),
+            mdb.job_point = rs.get("job_point"),
+            mdb.concern_point = rs.get("concern_point"),
+            mdb.grow = rs.get("grow"),
+            mdb.other = rs.get("other"),
+            mdb.skill_type = rs.get("skill_type"),
+        else:
+            # character_id で絞って同じ名前のもの無いなら skill_id が間違っているとして
+            # auto_increment する skill_id で新規に作成
+            print("insert skill", rs.get("skill_name"))
+            new_skill = CocSkills(
+                character_id=id,
+                skill_name=rs.get("skill_name"),
+                job_point=rs.get("job_point"),
+                concern_point=rs.get("concern_point"),
+                grow=rs.get("grow"),
+                other=rs.get("other"),
+                skill_type=rs.get("skill_type"),
+            )
+            db.session.add(new_skill)
+    return
 
 
 @ bp.route('/<int:id>/delete', methods=['delete'])

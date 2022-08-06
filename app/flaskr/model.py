@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, Integer, String, DateTime
+from sqlalchemy import ForeignKey, Integer, String, DateTime, insert
 from . import db
 from flask_marshmallow import Marshmallow
 from flask_marshmallow.fields import fields
@@ -133,6 +133,22 @@ class CocSkillsSchema(ma.SQLAlchemyAutoSchema):
         model = CocSkills
         include_fk = True
         load_instance = True
+
+
+# Upsert サンプル(現状使っていない)
+# 使う側 db.session.execute(clause=model.upsert_skill(), params=req_skills)
+def upsert_skill():
+    stmt = insert(CocSkills)
+    return stmt.on_conflict_do_update(
+        index_elements=['skill_id'],
+        set_={
+            'skill_name': stmt.excluded.skill_name,
+            'job_point': stmt.excluded.job_point,
+            'concern_point': stmt.excluded.concern_point,
+            'grow': stmt.excluded.grow,
+            'other': stmt.excluded.other,
+            'skill_type': stmt.excluded.skill_type,
+        })
 
 
 class Characters(db.Model):
