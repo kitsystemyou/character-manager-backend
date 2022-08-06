@@ -1,5 +1,6 @@
+import datetime
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, session, jsonify
+    Blueprint, flash, g, render_template, request, jsonify
 )
 from werkzeug.exceptions import abort
 from http import HTTPStatus
@@ -8,7 +9,7 @@ from sqlalchemy import desc
 from datetime import datetime
 from flaskr.auth import login_required
 from flaskr.model import (
-    CharacterSchema, Characters, CocMetaInfo, CocMetaInfoSchema,
+    CharacterSchema, Characters, CocMetaInfo, CocMetaInfoSchema, CocSkillsSchema,
     CocStatusParameters, CocStatusParametersSchema, CocSkills
 )
 
@@ -35,10 +36,10 @@ def get_character(ch_id):
 
 
 @bp.route('/character_info/<int:ch_id>')
-def get_characters(ch_id):
-    print(ch_id)
+def get_character_meta_info(id):
+    print(id)
     character_info = db.session.query(Characters, CocMetaInfo).join(
-        CocMetaInfo, Characters.id == CocMetaInfo.character_id).filter(Characters.id == ch_id).first()
+        CocMetaInfo, Characters.id == CocMetaInfo.character_id).filter(Characters.id == id).first()
     """
         if using Dynamic Schema
         data = {Characters.__tablename__: character_info[0],
@@ -53,12 +54,12 @@ def get_characters(ch_id):
 
 
 @bp.route('/character_info_status/<int:ch_id>')
-def get_characters_info_status(ch_id):
-    print(ch_id)
+def get_characters_info_status(id):
+    print(id)
     character = db.session.query(Characters, CocMetaInfo, CocStatusParameters).\
         join(CocMetaInfo, Characters.id == CocMetaInfo.character_id).\
         join(CocStatusParameters, Characters.id == CocStatusParameters.character_id).\
-        filter(Characters.id == ch_id).first()
+        filter(Characters.id == id).first()
     c = CharacterSchema(many=False).dump(character[0])
     c['coc_meta_info'] = CocMetaInfoSchema(many=False).dump(character[1])
     c['coc_status_parameters'] = CocStatusParametersSchema(
@@ -205,33 +206,133 @@ def get_character(id, check_author=True):
     return character_info
 
 
-@ bp.route('/<string:id>/update', methods=('GET', 'POST'))
+@ bp.route('/character/<int:id>', methods=['PATCH'])
 # @ login_required
 def update(id):
-    character = get_character(id)
+    print(id)
+    error = None
+    req_json = request.get_json()
+    # COC_SKILL は複数あるので別関数で取得・更新する
+    if not req_json["character"]:
+        error = "character is required."
+        flash(error)
+    else:
+        req_character = req_json["character"]
 
-    if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
-        error = None
+    if not req_json["character"]["coc_meta_info"]:
+        print("coc_meta_info is none.")
+    else:
+        req_meta = req_json["character"]["coc_meta_info"]
 
-        if not title:
-            error = 'Title is required.'
+    if not req_json["character"]["coc_status_parameters"]:
+        print("coc_status_parameters is none.")
+    else:
+        req_status = req_json["character"]["coc_status_parameters"]
 
-        if error is not None:
-            flash(error)
-            return jsonify({"result": '{}'.format(error)}), 500
+    # TODO: 関数化
+    c = db.session.query(Characters, CocMetaInfo, CocStatusParameters).\
+        join(CocMetaInfo, Characters.id == CocMetaInfo.character_id).\
+        join(CocStatusParameters, Characters.id == CocStatusParameters.character_id).\
+        filter(Characters.id == id).first()
+    chara = c[0]
+    meta = c[1]
+    status = c[2]
+
+    if error is not None:
+        flash(error)
+        return jsonify({"result": '{}'.format(error)}), 500
+    else:
+        # Update character, meta_ifo, status_params
+        chara.character_name = req_character.get('character_name')
+        chara.player_name = req_character.get("player_name")
+        chara.game_system = req_character.get("game_system")
+        chara.prof_img_path = req_character.get("prof_img_path")
+        chara.tags = req_character.get("tags")
+        chara.create_time = req_character.get("create_time", chara.create_time)
+        chara.update_time = datetime.now()
+        chara.delete_time = req_character.get("delete_time")
+        meta.job = req_meta.get("job")
+        meta.sex = req_meta.get("sex")
+        meta.age = req_meta.get("age")
+        meta.height = req_meta.get("height")
+        meta.weight = req_meta.get("weight")
+        meta.hair_color = req_meta.get("hair_color")
+        meta.eye_color = req_meta.get("eye_color")
+        meta.skin_color = req_meta.get("skin_color")
+        meta.home_place = req_meta.get("home_place")
+        meta.mental_disorder = req_meta.get(
+            "mental_disorder")
+        meta.edu_background = req_meta.get(
+            "edu_background")
+        status.str = req_status.get("str")
+        status.con = req_status.get("con")
+        status.pow = req_status.get("pow")
+        status.dex = req_status.get("dex")
+        status.app = req_status.get("app")
+        status.size = req_status.get("size")
+        status.inte = req_status.get("inte")
+        status.edu = req_status.get("edu")
+        status.hp = req_status.get("hp")
+        status.mp = req_status.get("mp")
+        status.init_san = req_status.get(
+            "init_san")
+        status.current_san = req_status.get(
+            "current_san")
+        status.idea = req_status.get("idea")
+        status.knowledge = req_status.get(
+            "knowledge")
+        status.damage_bonus = req_status.get(
+            "damage_bonus")
+        status.luck = req_status.get("luck")
+        status.max_job_point = req_status.get(
+            "max_job_point")
+        status.max_concern_point = req_status.get(
+            "max_concern_point")
+        # TODO: COC_SKILL の Upsert
+
+        if not req_json["character"]["coc_skills"]:
+            print("coc_status_parameters is none.")
         else:
-            character.character_name = title
-            character.player_name = body
-            db.session.commit()
-            return redirect(url_for('character.index'))
+            req_skills = req_json["character"]["coc_skills"]
+        update_skills(req_skills, id)
 
-    return render_template('character/update.html', post=character)
-    # return jsonify({'character': entries_schema.dump(character).data})
+        db.session.commit()
+        return jsonify({"result": "updated"}), HTTPStatus.OK
 
 
-@bp.route('/<int:id>/delete', methods=('POST',))
+def update_skills(req_skills, id):
+    db_skill = CocSkills.query.filter_by(character_id=id).all()
+    for rs in req_skills:
+        matched_db_data = list(filter(lambda skill: skill.skill_id == rs.get(
+            "skill_id"), db_skill))
+        if matched_db_data:
+            # skill_id 合うものあったら更新
+            print("update skill", rs.get("skill_name"), rs.get("skill_id"))
+            mdb = matched_db_data[0]
+            mdb.skill_name = rs.get("skill_name"),
+            mdb.job_point = rs.get("job_point"),
+            mdb.concern_point = rs.get("concern_point"),
+            mdb.grow = rs.get("grow"),
+            mdb.other = rs.get("other"),
+            mdb.skill_type = rs.get("skill_type"),
+        else:
+            # character_id で絞って同じ skill_id のもの無いなら skill_id が間違っているとして
+            # auto_increment する skill_id で新規に作成
+            print("insert skill", rs.get("skill_name"))
+            new_skill = CocSkills(
+                character_id=id,
+                skill_name=rs.get("skill_name"),
+                job_point=rs.get("job_point"),
+                concern_point=rs.get("concern_point"),
+                grow=rs.get("grow"),
+                other=rs.get("other"),
+                skill_type=rs.get("skill_type"),
+            )
+            db.session.add(new_skill)
+    return
+
+
+@ bp.route('/<int:id>/delete', methods=['delete'])
 # @login_required
 def delete(id):
     character_meta_info = CocMetaInfo.query.filter_by(character_id=id).first()
