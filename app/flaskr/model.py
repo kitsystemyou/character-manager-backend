@@ -157,6 +157,7 @@ class Characters(db.Model):
     coc_meta_info = db.relationship("CocMetaInfo", backref='characters')
     coc_status_parameters = db.relationship(
         "CocStatusParameters", backref='characters')
+    coc_skills = [db.relationship("CocSkills", backref='characters')]
 
 
 class CharacterSchema(ma.SQLAlchemyAutoSchema):
