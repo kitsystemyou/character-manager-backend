@@ -28,14 +28,14 @@ def list_character():
     return jsonify({'result': CharacterSchema(many=True).dump(characters)}), 200
 
 
-@bp.route('/character/<int:ch_id>')
-def get_character(ch_id):
-    character = Characters.query.filter_by(id=ch_id).first()
+@bp.route('/character/<int:id>')
+def get_character(id):
+    character = Characters.query.filter_by(id=id).first()
     print(character)
     return jsonify({'status': 'ok', 'character': CharacterSchema(many=False).dump(character)})
 
 
-@bp.route('/character_info/<int:ch_id>')
+@bp.route('/character_info/<int:id>')
 def get_character_meta_info(id):
     print(id)
     character_info = db.session.query(Characters, CocMetaInfo).join(
@@ -53,7 +53,7 @@ def get_character_meta_info(id):
     return jsonify({'status': 'ok', "result": c})
 
 
-@bp.route('/character_info_status/<int:ch_id>')
+@bp.route('/character_info_status/<int:id>')
 def get_characters_info_status(id):
     print(id)
     character = db.session.query(Characters, CocMetaInfo, CocStatusParameters).\
@@ -61,9 +61,25 @@ def get_characters_info_status(id):
         join(CocStatusParameters, Characters.id == CocStatusParameters.character_id).\
         filter(Characters.id == id).first()
     c = CharacterSchema(many=False).dump(character[0])
-    c['coc_meta_info'] = CocMetaInfoSchema(many=False).dump(character[1])
-    c['coc_status_parameters'] = CocStatusParametersSchema(
+    c["coc_meta_info"] = CocMetaInfoSchema(many=False).dump(character[1])
+    c["coc_status_parameters"] = CocStatusParametersSchema(
         many=False).dump(character[2])
+    return jsonify({"result": c}), 200
+
+
+@bp.route('/character_all_info/<int:id>')
+def get_character_all_info(id):
+    print(id)
+    character = db.session.query(Characters, CocMetaInfo, CocStatusParameters).\
+        join(CocMetaInfo, Characters.id == CocMetaInfo.character_id).\
+        join(CocStatusParameters, Characters.id == CocStatusParameters.character_id).\
+        filter(Characters.id == id).first()
+    c = CharacterSchema(many=False).dump(character[0])
+    c["coc_meta_info"] = CocMetaInfoSchema(many=False).dump(character[1])
+    c["coc_status_parameters"] = CocStatusParametersSchema(
+        many=False).dump(character[2])
+    skills = CocSkills.query.filter_by(character_id=id).all()
+    c["coc_skills"] = CocSkillsSchema(many=True).dump(skills)
     return jsonify({"result": c}), 200
 
 
