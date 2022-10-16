@@ -172,28 +172,51 @@ components:
       type: object
       description: character info
       x-examples:
-        Zelda:
-          id: 1
-          characterName: Zelda
-          hp: 30
-          mp: 30
-          createDate: '2000-01-01'
+        kale:
+          id: 0
+          user_id: string
+          character_name: kale
+          player_name: yoh
+          game_system: coc
+          prof_img_path: /path/to/image
+          tags: 'coc,hogehoge'
+          create_time: '2019-08-24'
+          update_time: '2019-08-24'
+          delete_time: '2019-08-24'
+          mp: 0
+          hp: 0
       properties:
         id:
           type: integer
-          description: Unique identifier for the given character.
-        characterName:
+          description: Unique identifier for the character.
+        user_id:
           type: string
-        hp:
-          type: integer
-        mp:
-          type: integer
-        createDate:
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        character_name:
+          type: string
+          example: 天王寺カイル
+        player_name:
+          type: string
+        game_system:
+          type: string
+          example: coc
+        prof_img_path:
+          type: string
+        tags:
+          type: string
+        create_time:
           type: string
           format: date
-          description: The date that the character was created.
+        update_time:
+          type: string
+          format: date
+        delete_time:
+          type: string
+          format: date
       required:
         - id
-        - firstName
-        - email
-        - emailVerified
+        - user_id
+        - character_name
+        - create_time
+        - update_time
+        - delete_time
