@@ -1,0 +1,199 @@
+openapi: 3.0.0
+x-stoplight:
+  id: 5k0kybq1khef5
+info:
+  title: character
+  version: '1.0'
+  description: test swagger
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  '/character/{characterId}':
+    parameters:
+      - schema:
+          type: string
+        name: characterId
+        in: path
+        required: true
+    get:
+      summary: Get Character Info by Character ID
+      tags: []
+      responses:
+        '200':
+          description: Character Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+              examples:
+                Get Character Alice Smith:
+                  value:
+                    id: 142
+                    firstName: Alice
+                    lastName: Smith
+                    email: alice.smith@gmail.com
+                    dateOfBirth: '1997-10-31'
+                    emailVerified: true
+                    signUpDate: '2019-08-24'
+        '404':
+          description: Character Not Found
+      operationId: get-characters-characterId
+      description: Retrieve the information of the character with the matching character ID.
+    patch:
+      summary: Update Character Information
+      operationId: patch-characters-characterId
+      responses:
+        '200':
+          description: Character Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+              examples:
+                Updated Character Rebecca Baker:
+                  value:
+                    id: 13
+                    firstName: Rebecca
+                    lastName: Baker
+                    email: rebecca@gmail.com
+                    dateOfBirth: '1985-10-02'
+                    emailVerified: false
+                    createDate: '2019-08-24'
+        '404':
+          description: Character Not Found
+        '409':
+          description: Email Already Taken
+      description: Update the information of an existing character.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                  description: 'If a new email is given, the character''s email verified property will be set to false.'
+                dateOfBirth:
+                  type: string
+            examples:
+              Update First Name:
+                value:
+                  firstName: Rebecca
+              Update Email:
+                value:
+                  email: rebecca@gmail.com
+              Update Last Name & Date of Birth:
+                value:
+                  lastName: Baker
+                  dateOfBirth: '1985-10-02'
+        description: Patch character properties to update.
+    delete:
+      summary: ''
+      operationId: delete-character-characterId
+      responses:
+        '200':
+          description: OK
+      description: Delete the information of an existing character.
+  /character:
+    post:
+      summary: Create New Character
+      operationId: post-character
+      responses:
+        '200':
+          description: Character Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+              examples:
+                New Character Bob Fellow:
+                  value:
+                    id: 12
+                    firstName: Bob
+                    lastName: Fellow
+                    email: bob.fellow@gmail.com
+                    dateOfBirth: '1996-08-24'
+                    emailVerified: false
+                    createDate: '2020-11-18'
+        '400':
+          description: Missing Required Information
+        '409':
+          description: Email Already Taken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                dateOfBirth:
+                  type: string
+                  format: date
+              required:
+                - firstName
+                - lastName
+                - email
+                - dateOfBirth
+            examples:
+              Create Character Bob Fellow:
+                value:
+                  firstName: Bob
+                  lastName: Fellow
+                  email: bob.fellow@gmail.com
+                  dateOfBirth: '1996-08-24'
+        description: Post the necessary fields for the API to create a new character.
+      description: Create a new character.
+    parameters: []
+    get:
+      summary: ''
+      operationId: get-characters
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+              examples: {}
+      description: get characters
+components:
+  schemas:
+    Character:
+      title: Character
+      type: object
+      description: character info
+      x-examples:
+        Zelda:
+          id: 1
+          characterName: Zelda
+          hp: 30
+          mp: 30
+          createDate: '2000-01-01'
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given character.
+        characterName:
+          type: string
+        hp:
+          type: integer
+        mp:
+          type: integer
+        createDate:
+          type: string
+          format: date
+          description: The date that the character was created.
+      required:
+        - id
+        - firstName
+        - email
+        - emailVerified
