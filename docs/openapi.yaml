@@ -24,17 +24,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Character'
-              examples:
-                Get Character Alice Smith:
-                  value:
-                    id: 142
-                    firstName: Alice
-                    lastName: Smith
-                    email: alice.smith@gmail.com
-                    dateOfBirth: '1997-10-31'
-                    emailVerified: true
-                    signUpDate: '2019-08-24'
+                $ref: '#/components/schemas/CharacterAlllInfo'
+              examples: {}
+            application/xml:
+              schema:
+                type: object
+                properties: {}
         '404':
           description: Character Not Found
       operationId: get-characters-characterId
@@ -44,53 +39,10 @@ paths:
       operationId: patch-characters-characterId
       responses:
         '200':
-          description: Character Updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Character'
-              examples:
-                Updated Character Rebecca Baker:
-                  value:
-                    id: 13
-                    firstName: Rebecca
-                    lastName: Baker
-                    email: rebecca@gmail.com
-                    dateOfBirth: '1985-10-02'
-                    emailVerified: false
-                    createDate: '2019-08-24'
+          description: OK
         '404':
           description: Character Not Found
-        '409':
-          description: Email Already Taken
       description: Update the information of an existing character.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-                email:
-                  type: string
-                  description: 'If a new email is given, the character''s email verified property will be set to false.'
-                dateOfBirth:
-                  type: string
-            examples:
-              Update First Name:
-                value:
-                  firstName: Rebecca
-              Update Email:
-                value:
-                  email: rebecca@gmail.com
-              Update Last Name & Date of Birth:
-                value:
-                  lastName: Baker
-                  dateOfBirth: '1985-10-02'
-        description: Patch character properties to update.
     delete:
       summary: ''
       operationId: delete-character-characterId
@@ -103,54 +55,10 @@ paths:
       summary: Create New Character
       operationId: post-character
       responses:
-        '200':
-          description: Character Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Character'
-              examples:
-                New Character Bob Fellow:
-                  value:
-                    id: 12
-                    firstName: Bob
-                    lastName: Fellow
-                    email: bob.fellow@gmail.com
-                    dateOfBirth: '1996-08-24'
-                    emailVerified: false
-                    createDate: '2020-11-18'
         '400':
           description: Missing Required Information
         '409':
           description: Email Already Taken
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-                email:
-                  type: string
-                dateOfBirth:
-                  type: string
-                  format: date
-              required:
-                - firstName
-                - lastName
-                - email
-                - dateOfBirth
-            examples:
-              Create Character Bob Fellow:
-                value:
-                  firstName: Bob
-                  lastName: Fellow
-                  email: bob.fellow@gmail.com
-                  dateOfBirth: '1996-08-24'
-        description: Post the necessary fields for the API to create a new character.
       description: Create a new character.
     parameters: []
     get:
@@ -165,6 +73,45 @@ paths:
                 $ref: '#/components/schemas/Character'
               examples: {}
       description: get characters
+  '/character_meta_info/{characterID}':
+    parameters:
+      - schema:
+          type: string
+        name: characterID
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+      operationId: get-character_meta_info-characterID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CharacterWithMetaInfo'
+  '/character_all_info/{characterId}':
+    parameters:
+      - schema:
+          type: string
+        name: characterId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+      operationId: get-character_all_info-characterId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CharacterAlllInfo'
+      description: ''
 components:
   schemas:
     Character:
@@ -183,8 +130,6 @@ components:
           create_time: '2019-08-24'
           update_time: '2019-08-24'
           delete_time: '2019-08-24'
-          mp: 0
-          hp: 0
       properties:
         id:
           type: integer
@@ -220,3 +165,201 @@ components:
         - create_time
         - update_time
         - delete_time
+    CharacterWithMetaInfo:
+      type: object
+      x-examples:
+        example-1:
+          id: 0
+          user_id: string
+          character_name: kale
+          player_name: yoh
+          game_system: coc
+          prof_img_path: /path/to/image
+          tags: 'coc,hogehoge'
+          create_time: '2019-08-24'
+          update_time: '2019-08-24'
+          delete_time: '2019-08-24'
+          job: student
+          sex: male
+          age: '25'
+          height: '170'
+          weight: '60'
+          hair_color: black
+          eye_color: black
+          skin_color: white
+          home_place: tokyo
+          mental_disorder: ''
+          edu_background: bachelar
+          memo: ''
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: string
+        character_name:
+          type: string
+        player_name:
+          type: string
+        game_system:
+          type: string
+        prof_img_path:
+          type: string
+        tags:
+          type: string
+        create_time:
+          type: string
+        update_time:
+          type: string
+        delete_time:
+          type: string
+        job:
+          type: string
+        sex:
+          type: string
+        age:
+          type: string
+        height:
+          type: string
+        weight:
+          type: string
+        hair_color:
+          type: string
+        eye_color:
+          type: string
+        skin_color:
+          type: string
+        home_place:
+          type: string
+        mental_disorder:
+          type: string
+        edu_background:
+          type: string
+        memo:
+          type: string
+      description: ''
+    CharacterAlllInfo:
+      type: object
+      x-examples:
+        example-1:
+          id: 0
+          user_id: string
+          character_name: kale
+          player_name: yoh
+          game_system: coc
+          prof_img_path: /path/to/image
+          tags: 'coc,hogehoge'
+          create_time: '2019-08-24'
+          update_time: '2019-08-24'
+          delete_time: '2019-08-24'
+          job: student
+          sex: male
+          age: '25'
+          height: '170'
+          weight: '60'
+          hair_color: black
+          eye_color: black
+          skin_color: white
+          home_place: tokyo
+          mental_disorder: ''
+          edu_background: bachelar
+          memo: ''
+          str: 13
+          con: 13
+          pow: 13
+          dex: 13
+          app: 13
+          size: 13
+          int: 13
+          edu: 13
+          hp: 13
+          mp: 13
+          init_san: 50
+          current_san: 50
+          idea: 13
+          knowledge: 13
+          damage_bonus: 13
+          luck: 13
+          max_job_point: 200
+          max_concern_point: 200
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: string
+        character_name:
+          type: string
+        player_name:
+          type: string
+        game_system:
+          type: string
+        prof_img_path:
+          type: string
+        tags:
+          type: string
+        create_time:
+          type: string
+        update_time:
+          type: string
+        delete_time:
+          type: string
+        job:
+          type: string
+        sex:
+          type: string
+        age:
+          type: string
+        height:
+          type: string
+        weight:
+          type: string
+        hair_color:
+          type: string
+        eye_color:
+          type: string
+        skin_color:
+          type: string
+        home_place:
+          type: string
+        mental_disorder:
+          type: string
+        edu_background:
+          type: string
+        memo:
+          type: string
+        str:
+          type: integer
+        con:
+          type: integer
+        pow:
+          type: integer
+        dex:
+          type: integer
+        app:
+          type: integer
+        size:
+          type: integer
+        int:
+          type: integer
+        edu:
+          type: integer
+        hp:
+          type: integer
+        mp:
+          type: integer
+        init_san:
+          type: integer
+        current_san:
+          type: integer
+        idea:
+          type: integer
+        knowledge:
+          type: integer
+        damage_bonus:
+          type: integer
+        luck:
+          type: integer
+        max_job_point:
+          type: integer
+        max_concern_point:
+          type: integer
+      description: ''
