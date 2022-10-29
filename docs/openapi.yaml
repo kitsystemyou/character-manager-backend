@@ -1,0 +1,365 @@
+openapi: 3.0.0
+x-stoplight:
+  id: 5k0kybq1khef5
+info:
+  title: character
+  version: '1.0'
+  description: test swagger
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  '/character/{characterId}':
+    parameters:
+      - schema:
+          type: string
+        name: characterId
+        in: path
+        required: true
+    get:
+      summary: Get Character Info by Character ID
+      tags: []
+      responses:
+        '200':
+          description: Character Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CharacterAlllInfo'
+              examples: {}
+            application/xml:
+              schema:
+                type: object
+                properties: {}
+        '404':
+          description: Character Not Found
+      operationId: get-characters-characterId
+      description: Retrieve the information of the character with the matching character ID.
+    patch:
+      summary: Update Character Information
+      operationId: patch-characters-characterId
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Character Not Found
+      description: Update the information of an existing character.
+    delete:
+      summary: ''
+      operationId: delete-character-characterId
+      responses:
+        '200':
+          description: OK
+      description: Delete the information of an existing character.
+  /character:
+    post:
+      summary: Create New Character
+      operationId: post-character
+      responses:
+        '400':
+          description: Missing Required Information
+        '409':
+          description: Email Already Taken
+      description: Create a new character.
+    parameters: []
+    get:
+      summary: ''
+      operationId: get-characters
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+              examples: {}
+      description: get characters
+  '/character_meta_info/{characterID}':
+    parameters:
+      - schema:
+          type: string
+        name: characterID
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+      operationId: get-character_meta_info-characterID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CharacterWithMetaInfo'
+  '/character_all_info/{characterId}':
+    parameters:
+      - schema:
+          type: string
+        name: characterId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+      operationId: get-character_all_info-characterId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CharacterAlllInfo'
+      description: ''
+components:
+  schemas:
+    Character:
+      title: Character
+      type: object
+      description: character info
+      x-examples:
+        kale:
+          id: 0
+          user_id: string
+          character_name: kale
+          player_name: yoh
+          game_system: coc
+          prof_img_path: /path/to/image
+          tags: 'coc,hogehoge'
+          create_time: '2019-08-24'
+          update_time: '2019-08-24'
+          delete_time: '2019-08-24'
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the character.
+        user_id:
+          type: string
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        character_name:
+          type: string
+          example: 天王寺カイル
+        player_name:
+          type: string
+        game_system:
+          type: string
+          example: coc
+        prof_img_path:
+          type: string
+        tags:
+          type: string
+        create_time:
+          type: string
+          format: date
+        update_time:
+          type: string
+          format: date
+        delete_time:
+          type: string
+          format: date
+      required:
+        - id
+        - user_id
+        - character_name
+        - create_time
+        - update_time
+        - delete_time
+    CharacterWithMetaInfo:
+      type: object
+      x-examples:
+        example-1:
+          id: 0
+          user_id: string
+          character_name: kale
+          player_name: yoh
+          game_system: coc
+          prof_img_path: /path/to/image
+          tags: 'coc,hogehoge'
+          create_time: '2019-08-24'
+          update_time: '2019-08-24'
+          delete_time: '2019-08-24'
+          job: student
+          sex: male
+          age: '25'
+          height: '170'
+          weight: '60'
+          hair_color: black
+          eye_color: black
+          skin_color: white
+          home_place: tokyo
+          mental_disorder: ''
+          edu_background: bachelar
+          memo: ''
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: string
+        character_name:
+          type: string
+        player_name:
+          type: string
+        game_system:
+          type: string
+        prof_img_path:
+          type: string
+        tags:
+          type: string
+        create_time:
+          type: string
+        update_time:
+          type: string
+        delete_time:
+          type: string
+        job:
+          type: string
+        sex:
+          type: string
+        age:
+          type: string
+        height:
+          type: string
+        weight:
+          type: string
+        hair_color:
+          type: string
+        eye_color:
+          type: string
+        skin_color:
+          type: string
+        home_place:
+          type: string
+        mental_disorder:
+          type: string
+        edu_background:
+          type: string
+        memo:
+          type: string
+      description: ''
+    CharacterAlllInfo:
+      type: object
+      x-examples:
+        example-1:
+          id: 0
+          user_id: string
+          character_name: kale
+          player_name: yoh
+          game_system: coc
+          prof_img_path: /path/to/image
+          tags: 'coc,hogehoge'
+          create_time: '2019-08-24'
+          update_time: '2019-08-24'
+          delete_time: '2019-08-24'
+          job: student
+          sex: male
+          age: '25'
+          height: '170'
+          weight: '60'
+          hair_color: black
+          eye_color: black
+          skin_color: white
+          home_place: tokyo
+          mental_disorder: ''
+          edu_background: bachelar
+          memo: ''
+          str: 13
+          con: 13
+          pow: 13
+          dex: 13
+          app: 13
+          size: 13
+          int: 13
+          edu: 13
+          hp: 13
+          mp: 13
+          init_san: 50
+          current_san: 50
+          idea: 13
+          knowledge: 13
+          damage_bonus: 13
+          luck: 13
+          max_job_point: 200
+          max_concern_point: 200
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: string
+        character_name:
+          type: string
+        player_name:
+          type: string
+        game_system:
+          type: string
+        prof_img_path:
+          type: string
+        tags:
+          type: string
+        create_time:
+          type: string
+        update_time:
+          type: string
+        delete_time:
+          type: string
+        job:
+          type: string
+        sex:
+          type: string
+        age:
+          type: string
+        height:
+          type: string
+        weight:
+          type: string
+        hair_color:
+          type: string
+        eye_color:
+          type: string
+        skin_color:
+          type: string
+        home_place:
+          type: string
+        mental_disorder:
+          type: string
+        edu_background:
+          type: string
+        memo:
+          type: string
+        str:
+          type: integer
+        con:
+          type: integer
+        pow:
+          type: integer
+        dex:
+          type: integer
+        app:
+          type: integer
+        size:
+          type: integer
+        int:
+          type: integer
+        edu:
+          type: integer
+        hp:
+          type: integer
+        mp:
+          type: integer
+        init_san:
+          type: integer
+        current_san:
+          type: integer
+        idea:
+          type: integer
+        knowledge:
+          type: integer
+        damage_bonus:
+          type: integer
+        luck:
+          type: integer
+        max_job_point:
+          type: integer
+        max_concern_point:
+          type: integer
+      description: ''
