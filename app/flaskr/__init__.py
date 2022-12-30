@@ -1,8 +1,6 @@
-from cgitb import html
 import os
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_sqlalchemy.model import DefaultMeta, Model
 from flask_marshmallow import Marshmallow
 
 username = 'root'
@@ -47,6 +45,8 @@ def create_app(test_config=None):
 
     from . import character
     app.register_blueprint(character.bp)
+    from . import oauth
+    app.register_blueprint(oauth.bp)
     app.add_url_rule('/', endpoint='index')
 
     # a simple page that says hello
