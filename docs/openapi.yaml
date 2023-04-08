@@ -8,6 +8,29 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
+  /character:
+    post:
+      summary: Create New Character
+      operationId: post-character
+      responses:
+        '400':
+          description: Missing Required Information
+        '409':
+          description: Email Already Taken
+      description: キャラクター作成
+    parameters: []
+    get:
+      summary: ''
+      operationId: get-characters
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+              examples: {}
+      description: キャラクター一覧
   '/character/{characterId}':
     parameters:
       - schema:
@@ -33,7 +56,7 @@ paths:
         '404':
           description: Character Not Found
       operationId: get-characters-characterId
-      description: Retrieve the information of the character with the matching character ID.
+      description: ※未使用　キャラクターカード表示用の予定
     patch:
       summary: Update Character Information
       operationId: patch-characters-characterId
@@ -42,37 +65,14 @@ paths:
           description: OK
         '404':
           description: Character Not Found
-      description: Update the information of an existing character.
+      description: キャラクター更新
     delete:
       summary: ''
       operationId: delete-character-characterId
       responses:
         '200':
           description: OK
-      description: Delete the information of an existing character.
-  /character:
-    post:
-      summary: Create New Character
-      operationId: post-character
-      responses:
-        '400':
-          description: Missing Required Information
-        '409':
-          description: Email Already Taken
-      description: Create a new character.
-    parameters: []
-    get:
-      summary: ''
-      operationId: get-characters
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Character'
-              examples: {}
-      description: get characters
+      description: キャラクター削除
   '/character_meta_info/{characterID}':
     parameters:
       - schema:
