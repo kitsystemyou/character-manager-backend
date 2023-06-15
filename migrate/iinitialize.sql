@@ -87,7 +87,7 @@ CREATE TABLE
         `current_san` int NULL COMMENT '現在正気度',
         `idea` int NULL Comment 'アイデア',
         `knowledge` int NULL COMMENT '知識',
-        `damage_bonus` int NULL COMMENT 'ダメージボーナス',
+        `damage_bonus` char(20) NULL COMMENT 'ダメージボーナス',
         `luck` int NULL COMMENT '幸運',
         `max_job_point` int NULL COMMENT '最大職業ポイント',
         `max_concern_point` int NULL COMMENT '最大興味ポイント',
