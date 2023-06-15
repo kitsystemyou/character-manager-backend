@@ -65,7 +65,7 @@ coc_status_parameters {
   int current_san "正気度"
   int idea "アイデア"
   int knowledge "知識"
-  int damage_bonus "ダメージボーナス"
+  string damage_bonus "ダメージボーナス"
   int luck "幸運"
   int max_job_point "職業ポイント"
   int max_concern_point "興味ポイント"

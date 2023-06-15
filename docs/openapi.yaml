@@ -277,7 +277,7 @@ components:
           current_san: 50
           idea: 13
           knowledge: 13
-          damage_bonus: 13
+          damage_bonus: 1d4
           luck: 13
           max_job_point: 200
           max_concern_point: 200
@@ -355,7 +355,7 @@ components:
         knowledge:
           type: integer
         damage_bonus:
-          type: integer
+          type: string
         luck:
           type: integer
         max_job_point:

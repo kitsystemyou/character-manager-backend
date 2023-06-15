@@ -95,7 +95,7 @@ class CocStatusParameters(db.Model):
     current_san = db.Column('current_san', Integer, unique=False)
     idea = db.Column('idea', Integer, unique=False)
     knowledge = db.Column('knowledge', Integer, unique=False)
-    damage_bonus = db.Column('damage_bonus', Integer, unique=False)
+    damage_bonus = db.Column('damage_bonus', String(20), unique=False)
     luck = db.Column('luck', Integer, unique=False)
     max_job_point = db.Column('max_job_point', Integer, unique=False)
     max_concern_point = db.Column('max_concern_point', Integer, unique=False)
