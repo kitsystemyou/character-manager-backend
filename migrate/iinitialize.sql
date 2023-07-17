@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE
     `users` (
-        `id` char(32) NOT NULL COMMENT 'ユーザーID(UUID)',
+        `id` char(36) NOT NULL COMMENT 'ユーザーID(UUID)',
         `user_name` char(50) NOT NULL COMMENT 'ユーザー名',
         `email` char(50) NOT NULL COMMENT 'メールアドレス',
         `login_type` char(20) NOT NULL COMMENT 'ログイン種別',
