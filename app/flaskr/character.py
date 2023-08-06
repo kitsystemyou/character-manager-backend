@@ -83,7 +83,7 @@ def get_character_all_info(id):
     return jsonify({"result": c}), 200
 
 
-@bp.route('/character', methods=['POST'])
+@bp.route('/character_all_info', methods=['POST'])
 def create_character_info():
     # @login_required
     error = None
@@ -139,6 +139,12 @@ def create_character_info():
         error = "coc status parameters are required."
     else:
         coc_status_parameters = req_json["character"]["coc_status_parameters"]
+    # TODO: VALIDATION
+    if coc_status_parameters["max_job_point"] == "":
+        coc_status_parameters["max_job_point"] = 0
+    if coc_status_parameters["max_concern_point"] == "":
+        coc_status_parameters["max_concern_point"] = 0
+
     coc_status_parameters = CocStatusParameters(
         character_id=id,
         str=coc_status_parameters["str"],
@@ -147,7 +153,7 @@ def create_character_info():
         dex=coc_status_parameters["dex"],
         app=coc_status_parameters["app"],
         size=coc_status_parameters["size"],
-        inte=coc_status_parameters["inte"],
+        inte=coc_status_parameters["int"],  # CAUTION
         edu=coc_status_parameters["edu"],
         hp=coc_status_parameters["hp"],
         mp=coc_status_parameters["mp"],
@@ -174,14 +180,16 @@ def create_character_info():
             concern_point=skill_data["concern_point"],
             grow=skill_data["grow"],
             other=skill_data["other"],
-            skill_type=skill_data["skill_type"],
+            skill_type=skill_data.get("skill_type", 0),
         )
         create_skill(skill)
 
     if error is not None:
         return {"Failed to create character": error}, 500
     db.session.commit()
-    return {"res": character_data}, HTTPStatus.OK
+    character_data = req_json["character"]
+    character_data["id"] = id
+    return {"result": character_data}, HTTPStatus.OK
 
 
 def create_character(character):
