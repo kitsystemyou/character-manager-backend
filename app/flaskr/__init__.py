@@ -4,6 +4,8 @@ from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_sqlalchemy.model import DefaultMeta, Model
 from flask_marshmallow import Marshmallow
+from flask_cors import CORS
+
 
 username = 'root'
 password = 'pass'
@@ -12,6 +14,7 @@ port = '3306'
 db_name = 'charamane'
 db = SQLAlchemy()
 ma = Marshmallow()
+origins = ["http://localhost:3000", "http://localhost:3000/"]
 
 
 def create_app(test_config=None):
@@ -23,6 +26,14 @@ def create_app(test_config=None):
         SQLALCHEMY_DATABASE_URI='mysql://' + username + ':' + password +
         '@' + host + ':' + port + '/' + db_name,
         JSON_AS_ASCII=False
+    )
+
+    CORS(
+        app,
+        supports_credentials=True,
+        origins=origins,
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_headers=["*"],
     )
 
     if test_config is None:
