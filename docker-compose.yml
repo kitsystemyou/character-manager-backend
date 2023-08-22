@@ -1,0 +1,28 @@
+version: "1"
+services:
+  app:
+    build: .
+    ports:
+      - "5001:5000"
+    container_name: app
+    volumes:
+      - ./app:/usr/src/app
+    command: flask run --host=0.0.0.0
+    networks:
+      - internal
+      - external
+    environment:
+      FLASK_APP: flaskr
+      FLASK_ENV: development
+      DB_USER: root
+      DB_PASS: pass
+      DB_HOST: charamane_test
+      DB_PORT: 3306
+      DB_NAME: charamane
+networks:
+  internal:
+    driver: bridge
+    internal: true
+  external:
+    name: charamanetwork
+    external: true
