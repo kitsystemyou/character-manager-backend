@@ -1,17 +1,15 @@
-from cgitb import html
 import os
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_sqlalchemy.model import DefaultMeta, Model
 from flask_marshmallow import Marshmallow
 from flask_cors import CORS
 
 
-username = 'root'
-password = 'pass'
-host = '127.0.0.1'
-port = '3306'
-db_name = 'charamane'
+username = os.environ.get('DB_USER', 'root')
+password = os.environ.get('DB_PASS', 'pass')
+host = os.environ.get('DB_HOST', '127.0.0.1')
+port = os.environ.get('DB_PORT', '3306')
+db_name = os.environ.get('DB_NAME', 'charamane')
 db = SQLAlchemy()
 ma = Marshmallow()
 origins = ["http://localhost:3000", "http://localhost:3000/"]

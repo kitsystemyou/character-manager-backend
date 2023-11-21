@@ -14,7 +14,7 @@ https://kitsystemyou.github.io/character-manager-backend/dist/#/
 Pipenv
 
 ## getting start
-DB
+DB(*)
 
 ```
  docker run \
@@ -38,4 +38,28 @@ export FLASK_APP=flaskr
 export FLASK_ENV=development
 
 flask run
+```
+
+## if you use docker-compose
+please start your mysql db with upper procedure (*)
+
+```
+docker network create charamanetwork
+docker network connect charamanetwork charamane_test
+docker compose up
+# or docker compose up -d
+```
+
+exit
+
+```
+docker compose down
+```
+
+test
+
+```
+curl localhost:5001/hello
+curl localhost:5001/
+# return 404 html
 ```
