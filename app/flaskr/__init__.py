@@ -8,7 +8,7 @@ from flask_cors import CORS
 username = os.environ.get('DB_USER', 'root')
 password = os.environ.get('DB_PASS', 'pass')
 host = os.environ.get('DB_HOST', '127.0.0.1')
-port = os.environ.get('DB_PORT', '3306')
+port = os.environ.get('DB_PORT', '3308')
 db_name = os.environ.get('DB_NAME', 'charamane')
 db = SQLAlchemy()
 ma = Marshmallow()
