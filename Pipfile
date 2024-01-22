@@ -10,6 +10,8 @@ mysqlclient = "*"
 flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
 flask-cors = "*"
+google-cloud-storage = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.9"
