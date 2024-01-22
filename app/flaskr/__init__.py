@@ -58,6 +58,9 @@ def create_app(test_config=None):
     app.register_blueprint(character.bp)
     app.add_url_rule('/', endpoint='index')
 
+    from . import cloud_storage
+    app.register_blueprint(cloud_storage.bp)
+
     # a simple page that says hello
     @app.route('/hello')
     def hello():
