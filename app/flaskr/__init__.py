@@ -22,8 +22,6 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         SQLALCHEMY_TRACK_MODIFICATIONS=True,
         SQLALCHEMY_DATABASE_URI=f"mysql://{username}:{password}@{host}:{port}/{db_name}",
-        SSL_MODE="VERIFY_IDENTITY",
-        SSL_CA="/etc/ssl/certs/ca-certificates.crt"
     )
 
     CORS(
