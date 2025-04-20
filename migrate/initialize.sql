@@ -30,7 +30,7 @@ DROP TABLE IF EXISTS `characters`;
 CREATE TABLE
     `characters` (
         `id` int NOT NULL AUTO_INCREMENT COMMENT 'キャラクターID',
-        `user_id` char(32) NOT NULL COMMENT 'ユーザーID(UUID)',
+        `user_id` char(36) NOT NULL COMMENT 'ユーザーID(UUID)',
         `character_name` char(255) NOT NULL COMMENT 'PC名',
         `player_name` char(20) NOT NULL COMMENT 'PL名',
         `game_system` char(20) NOT NULL COMMENT 'ゲームシステム',
