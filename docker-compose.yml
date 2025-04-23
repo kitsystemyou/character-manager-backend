@@ -16,7 +16,7 @@ services:
       FLASK_ENV: development
       DB_USER: root
       DB_PASS: pass
-      DB_HOST: charamane_test
+      DB_HOST: charamane
       DB_PORT: 3306
       DB_NAME: charamane
 networks:
