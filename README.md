@@ -45,7 +45,7 @@ please start your mysql db with upper procedure (*)
 
 ```
 docker network create charamanetwork
-docker network connect charamanetwork charamane_test
+docker network connect charamanetwork charamane
 docker compose up
 # or docker compose up -d
 ```
