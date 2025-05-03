@@ -17,15 +17,15 @@ Pipenv
 DB(*)
 
 ```
- docker run \
- --restart=always \
- --name charamane \
- -e MYSQL_ROOT_PASSWORD=pass \
- -e MYSQL_USER=user \
- -e MYSQL_PASSWORD=pass \
- -e TZ=Asia/Tokyo \
- -p 3308:3306 \
- -d mysql:8.0
+docker run \
+--restart=always \
+--name charamane \
+-e MYSQL_ROOT_PASSWORD=pass \
+-e MYSQL_USER=user \
+-e MYSQL_PASSWORD=pass \
+-e TZ=Asia/Tokyo \
+-p 3308:3306 \
+-d mysql:8.0
 
 mysql -h 127.0.0.1 --port 3308 -u root -ppass < ./migrate/initialize.sql
 ```
