@@ -75,9 +75,14 @@ def get_character_all_info(id):
         join(CocStatusParameters, Characters.id == CocStatusParameters.character_id).\
         filter(Characters.id == id).first()
     c = CharacterSchema(many=False).dump(character[0])
+
+    # この APIだけ BasicInfo をネスト内に入れてルートから消す
+    basic_info_keys = ["character_name", "player_name", "game_system", "prof_img_path", "tags"]
+    c["basic_character_info"] = {key: c[key] for key in basic_info_keys}
+    [c.pop(k) for k in ["character_name", "player_name", "game_system", "prof_img_path"]]
+
     c["coc_meta_info"] = CocMetaInfoSchema(many=False).dump(character[1])
-    c["coc_status_parameters"] = CocStatusParametersSchema(
-        many=False).dump(character[2])
+    c["coc_status_parameters"] = CocStatusParametersSchema(many=False).dump(character[2])
     skills = CocSkills.query.filter_by(character_id=id).all()
     c["coc_skills"] = CocSkillsSchema(many=True).dump(skills)
     return jsonify({"result": c}), 200
