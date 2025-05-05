@@ -79,7 +79,7 @@ def get_character_all_info(id):
     # この APIだけ BasicInfo をネスト内に入れてルートから消す
     basic_info_keys = ["character_name", "player_name", "game_system", "prof_img_path", "tags"]
     c["basic_character_info"] = {key: c[key] for key in basic_info_keys}
-    [c.pop(k) for k in ["character_name", "player_name", "game_system", "prof_img_path"]]
+    [c.pop(k) for k in basic_info_keys]
 
     c["coc_meta_info"] = CocMetaInfoSchema(many=False).dump(character[1])
     c["coc_status_parameters"] = CocStatusParametersSchema(many=False).dump(character[2])
