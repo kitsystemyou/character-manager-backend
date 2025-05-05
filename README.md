@@ -37,6 +37,7 @@ API
 export FLASK_APP=flaskr
 export FLASK_ENV=development
 cd ./app
+pip install -r requirements.txt
 flask run
 ```
 
@@ -67,7 +68,7 @@ curl localhost:5001/
 create character sample
 
 ```
-curl "https://5000-kitsystemyo-characterma-ewvu0d1ycf7.ws-us118.gitpod.io/character_all_info" \
+curl "http://5localhost:5000/character_all_info" \
   -H "accept: application/json, text/plain, */*" \
   -H "accept-language: ja,en-US;q=0.9,en;q=0.8" \
   -H "cache-control: no-cache" \
