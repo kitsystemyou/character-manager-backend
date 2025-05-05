@@ -360,8 +360,7 @@ def update_skills(req_skills, id):
             db.session.add(new_skill)
     return
 
-
-@ bp.route('/<int:id>/delete', methods=['delete'])
+@ bp.route('/character/<int:id>', methods=['delete'])
 # @login_required
 def delete(id):
     character_meta_info = CocMetaInfo.query.filter_by(character_id=id).first()
