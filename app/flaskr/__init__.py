@@ -3,6 +3,7 @@ from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_cors import CORS
+from flask_migrate import Migrate
 
 
 username = os.environ.get('DB_USER', 'root')
@@ -12,6 +13,7 @@ port = os.environ.get('DB_PORT', '3306')
 db_name = os.environ.get('DB_NAME', 'charamane')
 db = SQLAlchemy()
 ma = Marshmallow()
+migrate = Migrate()
 origins = ["http://localhost:3000", "http://localhost:3000/"]
 
 
@@ -49,6 +51,7 @@ def create_app(test_config=None):
 
     db.init_app(app)
     ma.init_app(app)
+    migrate.init_app(app, db)
 
     # Create app blueprints
     from . import auth

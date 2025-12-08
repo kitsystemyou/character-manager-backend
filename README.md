@@ -11,12 +11,76 @@ This repository has a backend code of Character Manager.([Frontend is here](http
 https://kitsystemyou.github.io/character-manager-backend/dist/#/
 
 ## NEED
-Pipenv
+Python 3.9+
+
+## Database Support
+This application now supports multiple databases through ORM-based migrations:
+- MySQL / MariaDB (production)
+- PostgreSQL (production)
+- SQLite (development/testing)
+
+See [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) for detailed instructions.
 
 ## getting start
+
+### Option 1: Using ORM Migrations (Recommended - Database Agnostic)
+
+DB Setup (MySQL example, but works with PostgreSQL, SQLite, etc.)
+
+```bash
+docker run \
+--restart=always \
+--name charamane \
+-e MYSQL_ROOT_PASSWORD=pass \
+-e MYSQL_USER=user \
+-e MYSQL_PASSWORD=pass \
+-e TZ=Asia/Tokyo \
+-p 3308:3306 \
+-d mysql:8.0
+```
+
+Initialize Database with Migrations
+
+```bash
+# Install dependencies
+cd ./app
+pip install -r requirements.txt
+
+# Set environment variables
+export DB_USER=root
+export DB_PASS=pass
+export DB_HOST=127.0.0.1
+export DB_PORT=3308
+export DB_NAME=charamane
+
+# Create database (if not exists)
+mysql -h 127.0.0.1 --port 3308 -u root -ppass -e "CREATE DATABASE IF NOT EXISTS charamane CHARACTER SET utf8mb4;"
+
+# Initialize migrations (first time only)
+cd ..
+python migrations_cli.py init
+
+# Generate migration from models
+python migrations_cli.py migrate "Initial schema"
+
+# Apply migrations to database
+python migrations_cli.py upgrade
+```
+
+Run API
+
+```bash
+export FLASK_APP=flaskr
+export FLASK_ENV=development
+cd ./app
+flask run
+```
+
+### Option 2: Using SQL File (MySQL Only - Legacy)
+
 DB(*)
 
-```
+```bash
 docker run \
 --restart=always \
 --name charamane \
@@ -30,10 +94,9 @@ docker run \
 mysql -h 127.0.0.1 --port 3308 -u root -ppass < ./migrate/initialize.sql
 ```
 
-
 API
 
-```
+```bash
 export FLASK_APP=flaskr
 export FLASK_ENV=development
 cd ./app

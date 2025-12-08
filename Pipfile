@@ -12,6 +12,8 @@ marshmallow-sqlalchemy = "*"
 flask-cors = "*"
 google-cloud-storage = "*"
 gunicorn = "*"
+alembic = "*"
+flask-migrate = "*"
 
 [requires]
 python_version = "3.9"

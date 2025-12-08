@@ -1,37 +1,30 @@
-from sqlalchemy import ForeignKey, Integer, String, DateTime, insert
+from sqlalchemy import ForeignKey, Integer, String, DateTime, insert, text
 from . import db
 from flask_marshmallow import Marshmallow
 from flask_marshmallow.fields import fields
+from datetime import datetime
 
 
 ma = Marshmallow()
 
 
 class User(db.Model):
+    __tablename__ = 'users'
+
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
 
     def __repr__(self):
-        return f'<User {self.username!r}>'
+        return f'<User {self.user_name!r}>'
 
-    id = db.Column('id', Integer, primary_key=True)
-    username = db.Column('username', String(10), unique=False)
-    password = db.Column('password', String(20), unique=False)
-
-# 本稼働用
-# class User(db.Model):
-#     def __init__(self, **kwargs):
-#         super(User, self).__init__(**kwargs)
-
-#     def __repr__(self):
-#         return f'<User {self.username!r}>'
-
-#     id = db.Column('id', Integer, primary_key=True)
-#     username = db.Column('user_name', String(10), unique=False)
-#     password = db.Column('password', String(20), unique=False)
-#     create_time = db.Column('create_time', DateTime, unique=False)
-#     update_time = db.Column('update_time', DateTime, unique=False)
-#     delete_time = db.Column('delete_time', DateTime, unique=False)
+    id = db.Column('id', String(36), primary_key=True)
+    user_name = db.Column('user_name', String(50), nullable=False)
+    email = db.Column('email', String(50), nullable=False)
+    login_type = db.Column('login_type', String(20), nullable=False)
+    used_system = db.Column('used_system', String(255), nullable=True)
+    create_time = db.Column('create_time', DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP'))
+    update_time = db.Column('update_time', DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP'))
+    delete_time = db.Column('delete_time', DateTime, nullable=True)
 
 
 class CocMetaInfo(db.Model):
@@ -45,18 +38,18 @@ class CocMetaInfo(db.Model):
 
     character_id = db.Column('character_id', Integer,
                              ForeignKey('characters.id'), primary_key=True)
-    job = db.Column('job', String(10), unique=False)
-    sex = db.Column('sex', String(5), unique=False)
-    age = db.Column('age', String(5), unique=False)
-    height = db.Column('height', String(5), unique=False)
-    weight = db.Column('weight', String(5), unique=False)
-    hair_color = db.Column('hair_color', String(20), unique=False)
-    eye_color = db.Column('eye_color', String(20), unique=False)
-    skin_color = db.Column('skin_color', String(20), unique=False)
-    home_place = db.Column('home_place', String(20), unique=False)
-    mental_disorder = db.Column('mental_disorder', String(10), unique=False)
-    edu_background = db.Column('edu_background', String(10), unique=False)
-    memo = db.Column('memo', String(100), unique=False)
+    job = db.Column('job', String(10), nullable=True)
+    sex = db.Column('sex', String(5), nullable=True)
+    age = db.Column('age', String(5), nullable=True)
+    height = db.Column('height', String(5), nullable=True)
+    weight = db.Column('weight', String(5), nullable=True)
+    hair_color = db.Column('hair_color', String(20), nullable=True)
+    eye_color = db.Column('eye_color', String(20), nullable=True)
+    skin_color = db.Column('skin_color', String(20), nullable=True)
+    home_place = db.Column('home_place', String(20), nullable=True)
+    mental_disorder = db.Column('mental_disorder', String(10), nullable=True)
+    edu_background = db.Column('edu_background', String(10), nullable=True)
+    memo = db.Column('memo', String(100), nullable=True)
 
 
 class CocMetaInfoSchema(ma.SQLAlchemyAutoSchema):
@@ -81,24 +74,24 @@ class CocStatusParameters(db.Model):
 
     character_id = db.Column('character_id', Integer,
                              ForeignKey('characters.id'), primary_key=True)
-    str = db.Column('str', Integer, unique=False)
-    con = db.Column('con', Integer, unique=False)
-    pow = db.Column('pow', Integer, unique=False)
-    dex = db.Column('dex', Integer, unique=False)
-    app = db.Column('app', Integer, unique=False)
-    size = db.Column('size', Integer, unique=False)
-    inte = db.Column('inte', Integer, unique=False)
-    edu = db.Column('edu', Integer, unique=False)
-    hp = db.Column('hp', Integer, unique=False)
-    mp = db.Column('mp', Integer, unique=False)
-    init_san = db.Column('init_san', Integer, unique=False)
-    current_san = db.Column('current_san', Integer, unique=False)
-    idea = db.Column('idea', Integer, unique=False)
-    knowledge = db.Column('knowledge', Integer, unique=False)
-    damage_bonus = db.Column('damage_bonus', String(20), unique=False)
-    luck = db.Column('luck', Integer, unique=False)
-    max_job_point = db.Column('max_job_point', Integer, unique=False)
-    max_concern_point = db.Column('max_concern_point', Integer, unique=False)
+    str = db.Column('str', Integer, nullable=True)
+    con = db.Column('con', Integer, nullable=True)
+    pow = db.Column('pow', Integer, nullable=True)
+    dex = db.Column('dex', Integer, nullable=True)
+    app = db.Column('app', Integer, nullable=True)
+    size = db.Column('size', Integer, nullable=True)
+    inte = db.Column('inte', Integer, nullable=True)
+    edu = db.Column('edu', Integer, nullable=True)
+    hp = db.Column('hp', Integer, nullable=True)
+    mp = db.Column('mp', Integer, nullable=True)
+    init_san = db.Column('init_san', Integer, nullable=True)
+    current_san = db.Column('current_san', Integer, nullable=True)
+    idea = db.Column('idea', Integer, nullable=True)
+    knowledge = db.Column('knowledge', Integer, nullable=True)
+    damage_bonus = db.Column('damage_bonus', String(20), nullable=True)
+    luck = db.Column('luck', Integer, nullable=True)
+    max_job_point = db.Column('max_job_point', Integer, nullable=True)
+    max_concern_point = db.Column('max_concern_point', Integer, nullable=True)
 
 
 class CocStatusParametersSchema(ma.SQLAlchemyAutoSchema):
@@ -117,15 +110,15 @@ class CocSkills(db.Model):
     def __repr__(self):
         return f'<COC_SKILLS {self.skill_id!r}>'
 
-    skill_id = db.Column('skill_id', Integer, primary_key=True)
+    skill_id = db.Column('skill_id', Integer, primary_key=True, autoincrement=True)
     character_id = db.Column('character_id', Integer,
-                             ForeignKey('characters.id'))
-    skill_name = db.Column('skill_name', String, unique=False)
-    job_point = db.Column('job_point', Integer, unique=False)
-    concern_point = db.Column('concern_point', Integer, unique=False)
-    grow = db.Column('grow', Integer, unique=False)
-    other = db.Column('other', Integer, unique=False)
-    skill_type = db.Column('skill_type', Integer, unique=False)
+                             ForeignKey('characters.id'), nullable=False)
+    skill_name = db.Column('skill_name', String(50), nullable=False)
+    job_point = db.Column('job_point', Integer, nullable=True)
+    concern_point = db.Column('concern_point', Integer, nullable=True)
+    grow = db.Column('grow', Integer, nullable=True)
+    other = db.Column('other', Integer, nullable=True)
+    skill_type = db.Column('skill_type', Integer, nullable=True)
 
 
 class CocSkillsSchema(ma.SQLAlchemyAutoSchema):
@@ -160,16 +153,16 @@ class Characters(db.Model):
     def __repr__(self):
         return f'<CHARACTERS {self.id!r}>'
 
-    id = db.Column('id', Integer, primary_key=True)
-    user_id = db.Column('user_id', String(32), unique=True)
-    character_name = db.Column('character_name', String(255), unique=False)
-    player_name = db.Column('player_name', String(20), unique=False)
-    game_system = db.Column('game_system', String(20), unique=False)
-    prof_img_path = db.Column('prof_img_path', String(50), unique=True)
-    tags = db.Column('tags', String(255), unique=False)
-    create_time = db.Column('create_time', DateTime, unique=False)
-    update_time = db.Column('update_time', DateTime, unique=False)
-    delete_time = db.Column('delete_time', DateTime, unique=False)
+    id = db.Column('id', Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column('user_id', String(36), nullable=False)
+    character_name = db.Column('character_name', String(255), nullable=False)
+    player_name = db.Column('player_name', String(20), nullable=False)
+    game_system = db.Column('game_system', String(20), nullable=False)
+    prof_img_path = db.Column('prof_img_path', String(50), nullable=True)
+    tags = db.Column('tags', String(255), nullable=True)
+    create_time = db.Column('create_time', DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP'))
+    update_time = db.Column('update_time', DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP'))
+    delete_time = db.Column('delete_time', DateTime, nullable=True)
     coc_meta_info = db.relationship("CocMetaInfo", backref='characters')
     coc_status_parameters = db.relationship(
         "CocStatusParameters", backref='characters')
